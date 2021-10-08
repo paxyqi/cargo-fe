@@ -1,49 +1,48 @@
 // 此为货车选择页的子组件，用于修改某个货车的参数
 <template>
-  <n-form
-    :label-width="80"
-    :model="formValue"
-    :rules="rules"
-    :size="'large'"
-    ref="formRef"
-  >
-    <n-form-item label="长度" rule-path="dimension.length">
-      <n-input
-        v-model:number="formValue.dimension.length"
-        placeholder="输入货车车厢长度"
-      />
-    </n-form-item>
-    <n-form-item label="宽度" path="dimension.width">
-      <n-input
-        placeholder="输入货车车厢宽度"
-        v-model:number="formValue.dimension.width"
-      />
-    </n-form-item>
-    <n-form-item label="高度" path="dimension.hight">
-      <n-input
-        placeholder="输入货车车厢高度"
-        v-model:number="formValue.dimension.hight"
-      />
-    </n-form-item>
-    <n-form-item label="负载" path="maxLoad">
-      <n-input
-        placeholder="输入货车最大负载"
-        v-model:number="formValue.maxLoad"
-      />
-    </n-form-item>
-    <n-form-item label="数量" path="quantity">
-      <n-input
-        placeholder="输入该种货车数量"
-        v-model:number="formValue.quantity"
-      />
-    </n-form-item>
-    <n-form-item>
-      <n-button @click="check">确认</n-button>
-    </n-form-item>
-    <!-- <n-form-item>
+  <div>
+    <n-form label-width="80%" :model="formValue" size="large" ref="formRef">
+      <n-form-item label="长度" rule-path="dimension.length">
+        <n-input-number
+          v-model:value="formValue.dimension.length"
+          placeholder="输入货车车厢长度"
+        />
+      </n-form-item>
+      <n-form-item label="宽度" path="dimension.width">
+        <n-input-number
+          placeholder="输入货车车厢宽度"
+          v-model:value="formValue.dimension.width"
+        />
+      </n-form-item>
+      <n-form-item label="高度" path="dimension.hight">
+        <n-input-number
+          placeholder="输入货车车厢高度"
+          v-model:value="formValue.dimension.hight"
+        />
+      </n-form-item>
+      <n-form-item label="负载" path="maxLoad">
+        <n-input-number
+          placeholder="输入货车最大负载"
+          v-model:value="formValue.maxLoad"
+        />
+      </n-form-item>
+      <n-form-item label="数量" path="quantity">
+        <n-input-number
+          placeholder="输入该种货车数量"
+          v-model:value="formValue.quantity"
+        />
+      </n-form-item>
+      <n-form-item>
+        <n-button @click="check">确认</n-button>
+      </n-form-item>
+      <!-- <n-form-item>
       <n-button @click="handleValidateClick" attr-type="button">确认</n-button>
     </n-form-item> -->
-  </n-form>
+    </n-form>
+    <p>
+      {{ JSON.stringify(formValue) }}
+    </p>
+  </div>
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
@@ -51,43 +50,21 @@ import {
   //   useMessage,
   NForm,
   NFormItem,
-  NInput,
+  NInputNumber,
   NButton,
   //   FormValidationError,
 } from "naive-ui";
-import { IChangeCargoItem } from "../model/changeCargo";
-const formRef = ref(<IChangeCargoItem>{});
 // const message = useMessage();
-const formValue = ref(<IChangeCargoItem>{});
-const rules = {
+const formRef = ref(null);
+const formValue = ref({
   dimension: {
-    length: {
-      required: true,
-      message: "请输入货车车厢长度",
-      trigger: "blur",
-    },
-    width: {
-      required: true,
-      message: "请输入货车车厢宽度",
-      trigger: "blur",
-    },
-    hight: {
-      required: true,
-      message: "请输入货车车厢高度",
-      trigger: "blur",
-    },
+    length: 0,
+    width: 0,
+    hight: 0,
   },
-  maxLoad: {
-    required: true,
-    message: "请输入货车最大负载",
-    trigger: "blur",
-  },
-  quantity: {
-    required: true,
-    message: "请输入该种货车数量",
-    trigger: "blur",
-  },
-};
+  maxLoad: 0,
+  quantity: 0,
+});
 // const handleValidateClick = (e: MouseEvent) => {
 //   formRef.value.validate((errors: Array<FormValidationError>) => {
 //     if (!errors) {
@@ -99,6 +76,6 @@ const rules = {
 //   });
 // };
 const check = () => {
-  console.log(formRef.value);
+  console.log(formValue.value);
 };
 </script>

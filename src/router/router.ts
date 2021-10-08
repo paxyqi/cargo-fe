@@ -43,6 +43,11 @@ const router = createRouter({
       },
       component: () => import("../components/truckInput.vue"),
     },
+    {
+      path: "/test",
+      name: "test",
+      component: () => import("../components/test.vue"),
+    },
   ],
 });
 
