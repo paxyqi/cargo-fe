@@ -65,7 +65,7 @@ const createColumns = (run: (rowData: ICargoItem) => void) => {
     },
   ];
 };
-const createData: () => ICargoItem[] = () => [
+const createData: () => Partial<ICargoItem>[] = () => [
   {
     key: 0,
     code: "1",

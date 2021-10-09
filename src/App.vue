@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { NNotificationProvider } from "naive-ui";
+import { NNotificationProvider, NMessageProvider } from "naive-ui";
 </script>
 
 <template>
   <n-notification-provider>
-    <router-view></router-view>
+    <n-message-provider>
+      <router-view></router-view>
+    </n-message-provider>
   </n-notification-provider>
 </template>
 
