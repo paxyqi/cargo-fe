@@ -20,6 +20,7 @@
         </div>
       </n-layout-content>
     </n-layout>
+    <truckInput ref="truckInput"></truckInput>
   </n-card>
 </template>
 <script lang="ts" setup>
