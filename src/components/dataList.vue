@@ -23,7 +23,7 @@
       <n-card>
         <truck-input
           :init-value="childrenData"
-          @onFormDataSubmit="onFormDataSubmit"
+          @formSubmit="onFormDataSubmit"
         />
       </n-card>
     </n-modal>

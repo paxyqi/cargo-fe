@@ -87,10 +87,10 @@ const props = defineProps({
 const { initValue } = toRefs(props);
 const formValue = ref(initValue);
 const emit = defineEmits<{
-  (event: "onFormDataSubmit", form: IChangeCargoForm): void;
+  (event: "formSubmit", form: IChangeCargoForm): void;
 }>();
 const check = () => {
-  emit("onFormDataSubmit", formValue.value);
+  emit("formSubmit", formValue.value);
 };
 </script>
 <style>
