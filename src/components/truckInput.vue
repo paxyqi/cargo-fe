@@ -61,8 +61,9 @@
     </p>
   </div>
 </template>
+
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, defineProps, defineExpose } from "vue";
 import {
   NForm,
   NFormItem,
@@ -76,18 +77,25 @@ import {
 } from "naive-ui";
 import { ListCircleOutline } from "@vicons/ionicons5";
 const formRef = ref(null);
-const formValue = ref({
-  dimension: {
-    length: 0,
-    width: 0,
-    hight: 0,
+const props = defineProps({
+  formValue: {
+    dimension: {
+      length: 0,
+      width: 0,
+      hight: 0,
+    },
+    maxLoad: 0,
+    quantity: 0,
   },
-  maxLoad: 0,
-  quantity: 0,
 });
+const formValue = toRefs(props);
 const check = () => {
   console.log(formValue.value);
 };
+// 将表单数据暴漏给父组件
+defineExpose({
+  formValue,
+});
 </script>
 <style>
 .checkButton {

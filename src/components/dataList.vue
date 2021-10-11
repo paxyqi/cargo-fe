@@ -29,6 +29,7 @@ import {
   NLayoutContent,
 } from "naive-ui";
 import { ICargoItem } from "../model/cargo";
+import TruckInput from "./TruckInput.vue";
 const createColumns = (run: (rowData: ICargoItem) => void) => {
   return [
     {

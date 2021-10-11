@@ -36,12 +36,13 @@ const router = createRouter({
       component: () => import("../components/chooseCargo.vue"),
     },
     {
-      path: "/truckInput",
-      name: "truckInput",
+      // 待引入的子组件，命名需要遵循大驼峰格式
+      path: "/TruckInput",
+      name: "TruckInput",
       meta: {
         title: "货车参数修改",
       },
-      component: () => import("../components/truckInput.vue"),
+      component: () => import("../components/TruckInput.vue"),
     },
   ],
 });
