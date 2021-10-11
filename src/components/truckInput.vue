@@ -57,13 +57,14 @@
     </n-space>
 
     <p>
-      {{ JSON.stringify(formValue) }}
+      {{ JSON.stringify(initValue) }}
     </p>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, defineExpose } from "vue";
+import { ref, toRefs } from "vue";
+import { IChangeCargoForm } from "../model/changeCargo";
 import {
   NForm,
   NFormItem,
@@ -78,24 +79,19 @@ import {
 import { ListCircleOutline } from "@vicons/ionicons5";
 const formRef = ref(null);
 const props = defineProps({
-  formValue: {
-    dimension: {
-      length: 0,
-      width: 0,
-      hight: 0,
-    },
-    maxLoad: 0,
-    quantity: 0,
+  initValue: {
+    required: true,
+    type: Object as () => IChangeCargoForm,
   },
 });
-const formValue = toRefs(props);
+const { initValue } = toRefs(props);
+const formValue = ref(initValue);
+const emit = defineEmits<{
+  (event: "onFormDataSubmit", form: IChangeCargoForm): void;
+}>();
 const check = () => {
-  console.log(formValue.value);
+  emit("onFormDataSubmit", formValue.value);
 };
-// 将表单数据暴漏给父组件
-defineExpose({
-  formValue,
-});
 </script>
 <style>
 .checkButton {

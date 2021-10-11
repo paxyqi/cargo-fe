@@ -62,7 +62,7 @@ const notice = useNotification();
 const login = async () => {
   console.log(userName.value, passwd.value);
   if (userName.value === "pixy" && passwd.value === "114514") {
-    router.push({ path: "/truckInput" });
+    router.push({ path: "/dataList" });
   }
   const data = JSON.stringify({
     // 整合登录信息

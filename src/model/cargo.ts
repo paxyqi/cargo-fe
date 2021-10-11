@@ -1,5 +1,5 @@
 export interface ICargoItem {
-  key?: number;
+  key: number;
   code: string;
   name: string;
   dimension: [number, number, number];

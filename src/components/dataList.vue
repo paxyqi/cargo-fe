@@ -1,35 +1,49 @@
 <template>
-  <n-card>
-    <n-layout>
-      <n-layout-header>
-        <img alt="list logo" src=".././assets/list.png"
-      /></n-layout-header>
-      <n-layout-content content-style="padding: 24px;">
-        <div style="display: flex; flex-direction: column; align-items: center">
-          <n-data-table
-            :columns="columns"
-            :data="data"
-            size="large"
-            style="width: 60%"
-          />
-        </div>
-      </n-layout-content>
-    </n-layout>
-  </n-card>
+  <div>
+    <n-card>
+      <n-layout>
+        <n-layout-header>
+          <img alt="list logo" src=".././assets/list.png"
+        /></n-layout-header>
+        <n-layout-content content-style="padding: 24px;">
+          <div
+            style="display: flex; flex-direction: column; align-items: center"
+          >
+            <n-data-table
+              :columns="columns"
+              :data="data"
+              size="large"
+              style="width: 60%"
+            />
+          </div>
+        </n-layout-content>
+      </n-layout>
+    </n-card>
+    <n-modal v-model:show="showModal" :mask-closable="false">
+      <n-card>
+        <truck-input
+          :init-value="childrenData"
+          @onFormDataSubmit="onFormDataSubmit"
+        />
+      </n-card>
+    </n-modal>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { h } from "vue";
+import { h, reactive, ref } from "vue";
 import {
   NDataTable,
   NButton,
   NCard,
   NLayout,
   NLayoutHeader,
+  NModal,
   NLayoutContent,
 } from "naive-ui";
 import { ICargoItem } from "../model/cargo";
 import TruckInput from "./TruckInput.vue";
+import { IChangeCargoForm } from "../model/changeCargo";
 const createColumns = (run: (rowData: ICargoItem) => void) => {
   return [
     {
@@ -89,12 +103,41 @@ const createData: () => Partial<ICargoItem>[] = () => [
     maxLoad: 914,
   },
 ];
-
-const data = createData();
+const showModal = ref(false);
+const data = ref(createData());
+const childrenData = reactive({
+  key: 0,
+  dimension: {
+    length: 0,
+    width: 0,
+    hight: 0,
+  },
+  maxLoad: 0,
+  quantity: 0,
+});
 const columns = createColumns(
   // 定义运行函数，传入当前行数据
   (rowData: ICargoItem) => {
-    console.log(rowData.code);
+    console.log(rowData);
+    childrenData.key = rowData.key;
+    childrenData.dimension.hight = rowData.dimension[0];
+    childrenData.dimension.width = rowData.dimension[1];
+    childrenData.dimension.length = rowData.dimension[2];
+    childrenData.maxLoad = rowData.maxLoad;
+    childrenData.quantity = rowData.quantity;
+    showModal.value = true;
   }
 );
+const onFormDataSubmit = (form: IChangeCargoForm) => {
+  console.log(form);
+  const index = data.value.findIndex((item) => item.key === form.key);
+  data.value[index].dimension = [
+    form.dimension.hight,
+    form.dimension.width,
+    form.dimension.length,
+  ];
+  data.value[index].maxLoad = form.maxLoad;
+  data.value[index].quantity = form.quantity;
+  showModal.value = false;
+};
 </script>
