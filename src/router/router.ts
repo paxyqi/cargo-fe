@@ -28,12 +28,12 @@ const router = createRouter({
       component: () => import("../components/choose.vue"),
     },
     {
-      path: "/chooseCargo",
-      name: "chooseCargo",
+      path: "/chooseTruck",
+      name: "chooseTruck",
       meta: {
         title: "货车选择",
       },
-      component: () => import("../components/chooseCargo.vue"),
+      component: () => import("../components/chooseTruck.vue"),
     },
     {
       // 待引入的子组件，命名需要遵循大驼峰格式
