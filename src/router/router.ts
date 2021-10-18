@@ -42,7 +42,7 @@ const router = createRouter({
       meta: {
         title: "货车参数修改",
       },
-      component: () => import("../components/TruckInput.vue"),
+      component: () => import("../components/truckInput.vue"),
     },
   ],
 });

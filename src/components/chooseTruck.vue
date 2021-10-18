@@ -24,6 +24,7 @@
         </n-layout-content>
       </n-layout>
     </n-card>
+    <button @click="getData">刷新</button>
     <n-modal v-model:show="showModal" :mask-closable="false">
       <n-card>
         <truck-input
@@ -46,6 +47,7 @@ import {
   NH1,
   NIcon,
   NModal,
+  useNotification,
 } from "naive-ui";
 import { CarOutline } from "@vicons/ionicons5";
 import { ICargoItem } from "../model/cargo";
@@ -123,6 +125,36 @@ const createData: () => Partial<ICargoItem>[] = () => [
     maxLoad: 914,
   },
 ];
+const notice = useNotification();
+const getData = async () => {
+  const getTruckTypeURL = "http://10.128.226.201:8080/get-repository";
+  const data = JSON.stringify({
+    // 获取货车类型信息
+    repository_name: "truck-type-repository",
+  });
+  await fetch(getTruckTypeURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "http://10.128.226.201",
+      "Access-Control-Allow-Methods": "GET, POST",
+    },
+    body: data,
+    credentials: "include",
+    mode: "cors",
+  })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((e) => {
+      notice.create({
+        title: "错误",
+        content: e.toString(),
+        duration: 5000,
+        type: "error",
+      });
+    });
+};
 const checkedRowKeysRef: Ref<RowKey[]> = ref([]);
 const handleCheck = (rowKeys: RowKey[]) => {
   checkedRowKeysRef.value = rowKeys;

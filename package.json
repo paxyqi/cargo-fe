@@ -8,16 +8,20 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "js-cookie": "^3.0.1",
     "vue": "^3.2.13",
+    "vue-cookie": "^1.1.4",
+    "vue-cookies": "^1.7.4",
     "vue-router": "^4.0.11",
     "xicons": "^1.0.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
     "@vicons/ionicons5": "^0.11.0",
     "@vicons/utils": "^0.1.4",
-    "@vitejs/plugin-vue": "^1.9.0",
+    "@vitejs/plugin-vue": "^1.9.2",
     "@vue/eslint-config-prettier": "^6.0.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",

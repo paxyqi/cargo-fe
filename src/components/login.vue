@@ -55,35 +55,31 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const userName = ref("");
 const passwd = ref("");
-// enum Response {
-//   body:
-// }
 const notice = useNotification();
 const login = async () => {
   console.log(userName.value, passwd.value);
-  if (userName.value === "pixy" && passwd.value === "114514") {
-    router.push({ path: "/chooseCargo" });
-  }
   const data = JSON.stringify({
     // 整合登录信息
     user_name: userName.value,
     pass_word: passwd.value,
   });
-  const loginURL = "http://10.112.238.172:8080";
+  const loginURL = "http://10.128.226.201:8080";
   await fetch(loginURL, {
     // 发送请求
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "http://10.128.226.201",
       "Access-Control-Allow-Methods": "GET, POST",
     },
+    credentials: "include",
     body: data,
-    mode: "no-cors",
+    mode: "cors",
   })
     .then((response) => {
-      console.log(response.json());
-      // let resObj = JSON.parse(response);
+      if (response.status === 200) {
+        router.push({ path: "/chooseTruck" });
+      }
     })
     .catch((e) => {
       notice.create({
