@@ -51,7 +51,7 @@ import {
 } from "naive-ui";
 import { CarOutline } from "@vicons/ionicons5";
 import { ICargoItem } from "../model/cargo";
-import { IChangeCargoForm } from "../model/changeCargo";
+import { IChangeTruckForm } from "../model/changeTruck";
 import TruckInput from "./TruckInput.vue";
 import {
   RowKey,
@@ -185,7 +185,7 @@ const columns = createColumns(
     showModal.value = true;
   }
 );
-const onFormDataSubmit = (form: IChangeCargoForm) => {
+const onFormDataSubmit = (form: IChangeTruckForm) => {
   console.log(form);
   const index = data.value.findIndex((item) => item.key === form.key);
   data.value[index].dimension = [

@@ -1,4 +1,4 @@
-export interface IChangeCargoForm {
+export interface IChangeTruckForm {
   key: number;
   dimension: {
     length: number;

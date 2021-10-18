@@ -24,7 +24,6 @@
         </n-layout-content>
       </n-layout>
     </n-card>
-    <!-- <button @click="getData">刷新</button> -->
     <n-modal v-model:show="showModal" :mask-closable="false">
       <n-card>
         <truck-input
@@ -50,16 +49,15 @@ import {
   useNotification,
 } from "naive-ui";
 import { CarOutline } from "@vicons/ionicons5";
-import { ICargoItem } from "../model/cargo";
 import { ITruckItem } from "../model/truck";
 import { RawTruck } from "../model/rawTruckData";
-import { IChangeCargoForm } from "../model/changeCargo";
+import { IChangeTruckForm } from "../model/changeTruck";
 import TruckInput from "./TruckInput.vue";
 import {
   RowKey,
   TableSelectionColumn,
 } from "naive-ui/lib/data-table/src/interface";
-const createColumns = (change: (rowData: ICargoItem) => void) => [
+const createColumns = (change: (rowData: ITruckItem) => void) => [
   {
     type: "selection",
   } as TableSelectionColumn,
@@ -72,8 +70,16 @@ const createColumns = (change: (rowData: ICargoItem) => void) => [
     key: "name",
   },
   {
-    title: "长宽高",
-    key: "dimension",
+    title: "长",
+    key: "length",
+  },
+  {
+    title: "宽",
+    key: "width",
+  },
+  {
+    title: "高",
+    key: "hight",
   },
   {
     title: "最大载荷",
@@ -86,7 +92,7 @@ const createColumns = (change: (rowData: ICargoItem) => void) => [
   {
     title: "更改",
     key: "change",
-    render(row: ICargoItem) {
+    render(row: ITruckItem) {
       return h(
         // 渲染函数
         NButton,
@@ -101,32 +107,6 @@ const createColumns = (change: (rowData: ICargoItem) => void) => [
   },
 ];
 
-// const createData: () => Partial<ICargoItem>[] = () => [
-//   {
-//     key: 0,
-//     code: "1",
-//     name: "小红",
-//     dimension: [1, 2, 3],
-//     quantity: 0,
-//     maxLoad: 314,
-//   },
-//   {
-//     key: 1,
-//     code: "2",
-//     quantity: 0,
-//     name: "旺财",
-//     dimension: [1, 2, 3],
-//     maxLoad: 614,
-//   },
-//   {
-//     key: 2,
-//     code: "3",
-//     quantity: 0,
-//     name: "来福",
-//     dimension: [1, 2, 3],
-//     maxLoad: 914,
-//   },
-// ];
 // eslint-disable-next-line require-jsdoc
 function createTruckObj(rawData: RawTruck[]): ITruckItem[] {
   const res: ITruckItem[] = [];
@@ -136,8 +116,10 @@ function createTruckObj(rawData: RawTruck[]): ITruckItem[] {
       code: item.code,
       name: item.name,
       quantity: 0,
-      dimension: [item.dimension.a, item.dimension.b, item.dimension.c],
       maxLoad: item.maxload,
+      length: item.dimension.a,
+      width: item.dimension.b,
+      hight: item.dimension.c,
     };
     res.push(newData);
   });
@@ -165,7 +147,6 @@ const getData = async () => {
   })
     .then((response) => response.json())
     .then((responseText) => {
-      // console.log(responseText.body);
       dataList = createTruckObj(responseText.body);
       console.log(dataList);
       data.value = dataList;
@@ -186,7 +167,6 @@ const handleCheck = (rowKeys: RowKey[]) => {
   checkedRowKeysRef.value = rowKeys;
 };
 const showModal = ref(false);
-// const data = ref(dataList);
 const childrenData = reactive({
   key: 0,
   dimension: {
@@ -199,25 +179,23 @@ const childrenData = reactive({
 });
 const columns = createColumns(
   // 定义运行函数，传入当前行数据
-  (rowData: ICargoItem) => {
+  (rowData: ITruckItem) => {
     console.log(rowData);
     childrenData.key = rowData.key;
-    childrenData.dimension.hight = rowData.dimension[0];
-    childrenData.dimension.width = rowData.dimension[1];
-    childrenData.dimension.length = rowData.dimension[2];
+    childrenData.dimension.hight = rowData.hight;
+    childrenData.dimension.width = rowData.width;
+    childrenData.dimension.length = rowData.length;
     childrenData.maxLoad = rowData.maxLoad;
     childrenData.quantity = rowData.quantity;
     showModal.value = true;
   }
 );
-const onFormDataSubmit = (form: IChangeCargoForm) => {
+const onFormDataSubmit = (form: IChangeTruckForm) => {
   console.log(form);
   const index = data.value.findIndex((item) => item.key === form.key);
-  data.value[index].dimension = [
-    form.dimension.hight,
-    form.dimension.width,
-    form.dimension.length,
-  ];
+  data.value[index].hight = form.dimension.hight,
+  data.value[index].width = form.dimension.width,
+  data.value[index].length = form.dimension.length,
   data.value[index].maxLoad = form.maxLoad;
   data.value[index].quantity = form.quantity;
   showModal.value = false;
