@@ -6,7 +6,7 @@
           <n-icon size="60">
             <CarOutline />
           </n-icon>
-          <n-h1>货车参数与数量</n-h1>
+          <n-h1>货物参数与数量</n-h1>
         </n-layout-header>
         <n-layout-content>
           <div
@@ -24,7 +24,7 @@
         </n-layout-content>
       </n-layout>
     </n-card>
-    <!-- <button @click="getData">刷新</button> -->
+    <button @click="getData">刷新</button>
     <n-modal v-model:show="showModal" :mask-closable="false">
       <n-card>
         <truck-input
@@ -51,8 +51,6 @@ import {
 } from "naive-ui";
 import { CarOutline } from "@vicons/ionicons5";
 import { ICargoItem } from "../model/cargo";
-import { ITruckItem } from "../model/truck";
-import { RawTruck } from "../model/rawTruckData";
 import { IChangeCargoForm } from "../model/changeCargo";
 import TruckInput from "./TruckInput.vue";
 import {
@@ -76,8 +74,8 @@ const createColumns = (change: (rowData: ICargoItem) => void) => [
     key: "dimension",
   },
   {
-    title: "最大载荷",
-    key: "maxLoad",
+    title: "质量",
+    key: "mass",
   },
   {
     title: "数量",
@@ -101,56 +99,38 @@ const createColumns = (change: (rowData: ICargoItem) => void) => [
   },
 ];
 
-// const createData: () => Partial<ICargoItem>[] = () => [
-//   {
-//     key: 0,
-//     code: "1",
-//     name: "小红",
-//     dimension: [1, 2, 3],
-//     quantity: 0,
-//     maxLoad: 314,
-//   },
-//   {
-//     key: 1,
-//     code: "2",
-//     quantity: 0,
-//     name: "旺财",
-//     dimension: [1, 2, 3],
-//     maxLoad: 614,
-//   },
-//   {
-//     key: 2,
-//     code: "3",
-//     quantity: 0,
-//     name: "来福",
-//     dimension: [1, 2, 3],
-//     maxLoad: 914,
-//   },
-// ];
-// eslint-disable-next-line require-jsdoc
-function createTruckObj(rawData: RawTruck[]): ITruckItem[] {
-  const res: ITruckItem[] = [];
-  rawData.forEach((item, index, arr) => {
-    const newData: ITruckItem = {
-      key: index,
-      code: item.code,
-      name: item.name,
-      quantity: 0,
-      dimension: [item.dimension.a, item.dimension.b, item.dimension.c],
-      maxLoad: item.maxload,
-    };
-    res.push(newData);
-  });
-  return res;
-}
+const createData: () => Partial<ICargoItem>[] = () => [
+  {
+    key: 0,
+    code: "1",
+    name: "小红",
+    dimension: [1, 2, 3],
+    quantity: 0,
+    maxLoad: 314,
+  },
+  {
+    key: 1,
+    code: "2",
+    quantity: 0,
+    name: "旺财",
+    dimension: [1, 2, 3],
+    maxLoad: 614,
+  },
+  {
+    key: 2,
+    code: "3",
+    quantity: 0,
+    name: "来福",
+    dimension: [1, 2, 3],
+    maxLoad: 914,
+  },
+];
 const notice = useNotification();
-let dataList: ITruckItem[] = [];
-const data: Ref<ITruckItem[]> = ref([]);
 const getData = async () => {
   const getTruckTypeURL = "http://10.128.226.201:8080/get-repository";
-  const body = JSON.stringify({
+  const data = JSON.stringify({
     // 获取货车类型信息
-    repositoryname: "truck-type-repository",
+    repository_name: "truck-type-repository",
   });
   await fetch(getTruckTypeURL, {
     method: "POST",
@@ -159,34 +139,29 @@ const getData = async () => {
       "Access-Control-Allow-Origin": "http://10.128.226.201",
       "Access-Control-Allow-Methods": "GET, POST",
     },
-    body: body,
+    body: data,
     credentials: "include",
     mode: "cors",
   })
     .then((response) => response.json())
     .then((responseText) => {
-      // console.log(responseText.body);
-      dataList = createTruckObj(responseText.body);
-      console.log(dataList);
-      data.value = dataList;
+      console.log(responseText.body);
     })
     .catch((e) => {
       notice.create({
         title: "错误",
         content: e.toString(),
-        duration: 10000,
+        duration: 5000,
         type: "error",
       });
     });
 };
-// 页面启动时自动运行获取数据的函数
-getData();
 const checkedRowKeysRef: Ref<RowKey[]> = ref([]);
 const handleCheck = (rowKeys: RowKey[]) => {
   checkedRowKeysRef.value = rowKeys;
 };
 const showModal = ref(false);
-// const data = ref(dataList);
+const data = ref(createData());
 const childrenData = reactive({
   key: 0,
   dimension: {

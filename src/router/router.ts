@@ -12,22 +12,6 @@ const router = createRouter({
       },
     },
     {
-      path: "/dataList",
-      name: "dataList",
-      meta: {
-        title: "数据列表",
-      },
-      component: () => import("../components/dataList.vue"),
-    },
-    {
-      path: "/choose",
-      name: "choose",
-      meta: {
-        title: "方案选择",
-      },
-      component: () => import("../components/choose.vue"),
-    },
-    {
       path: "/chooseTruck",
       name: "chooseTruck",
       meta: {
