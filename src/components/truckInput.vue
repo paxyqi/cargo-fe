@@ -1,12 +1,9 @@
 // 此为货车选择页的子组件，用于修改某个货车的参数
 <template>
   <div>
-    <n-layout embedded content-style="padding: 24px;">
-      <n-card>
-        <n-h1>货车参数与数量</n-h1>
-        <n-icon size="60"> <ListCircleOutline /> </n-icon>
-      </n-card>
-    </n-layout>
+    <n-space justify="center">
+      <n-icon size="60"> <ListCircleOutline /> </n-icon>
+    </n-space>
     <br />
     <br />
     <n-space justify="center">
@@ -55,16 +52,15 @@
         </n-form-item>
       </n-form>
     </n-space>
-
-    <p>
+    <!-- <p>
       {{ JSON.stringify(initValue) }}
-    </p>
+    </p> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, toRefs } from "vue";
-import { IChangeCargoForm } from "../model/changeCargo";
+import { IChangeTruckForm } from "../model/changeTruck";
 import {
   NForm,
   NFormItem,
@@ -81,13 +77,13 @@ const formRef = ref(null);
 const props = defineProps({
   initValue: {
     required: true,
-    type: Object as () => IChangeCargoForm,
+    type: Object as () => IChangeTruckForm,
   },
 });
 const { initValue } = toRefs(props);
 const formValue = ref(initValue);
 const emit = defineEmits<{
-  (event: "formSubmit", form: IChangeCargoForm): void;
+  (event: "formSubmit", form: IChangeTruckForm): void;
 }>();
 const check = () => {
   emit("formSubmit", formValue.value);

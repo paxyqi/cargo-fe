@@ -1,8 +1,12 @@
-export interface ICargoItem {
+import { Orientation } from "./orientation";
+export interface ICargoItem{
   key: number;
   code: string;
   name: string;
-  dimension: [number, number, number];
-  maxLoad: number;
+  length: number;
+  width: number;
+  hight: number;
+  mass: number;
   quantity: number;
+  availableOrientation: Orientation[];
 }
