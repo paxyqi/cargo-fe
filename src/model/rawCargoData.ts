@@ -8,6 +8,6 @@ export interface RawCargo {
       c: number;
     };
     mass: number;
-    availableOrientation: Orientation[];
+    availableorientations: Orientation[];
   }
   

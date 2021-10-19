@@ -56,6 +56,14 @@
         </n-layout-content>
       </n-layout>
     </n-card>
+    <n-modal v-model:show="showModal" :mask-closable="false">
+      <n-card>
+        <CargoInput
+          :init-value="childrenCargoData"
+          @formSubmit="onFormDataSubmit"
+        />
+      </n-card>
+    </n-modal>
   </div>
 </template>
 <script lang="ts" setup>
@@ -78,12 +86,13 @@ import { RawTruck } from "../model/rawTruckData";
 import { RawCargo } from "../model/rawCargoData";
 import { IChangeTruckForm } from "../model/changeTruck";
 import { ICargoItem } from "../model/cargo";
-import { Orientation } from "../model/orientation";
 import TruckInput from "./TruckInput.vue";
+import cargoInputVue from "./cargoInput.vue";
 import {
   RowKey,
   TableSelectionColumn,
 } from "naive-ui/lib/data-table/src/interface";
+import CargoInput from "./cargoInput.vue";
 // 货车列名称
 const createColumns = (change: (rowData: ITruckItem) => void) => [
   {
@@ -167,10 +176,11 @@ const createCargoColumns = (change: (rowData: ICargoItem) => void) => [
     title: "数量",
     key: "quantity",
   },
-  {
-    title: "各方向负载极限",
-    key: "availableorientation",
-  },
+  // 货物各方向负载不方便在一行内展示，考虑在更改里面可见
+  // {
+  //   title: "各方向负载极限",
+  //   key: "availableorientation",
+  // },
   {
     title: "更改",
     key: "change",
@@ -210,7 +220,7 @@ function createTruckObj(rawData: RawTruck[]): ITruckItem[] {
 function createCargoObj(rawData: RawCargo[]): ICargoItem[] {
   const res: ICargoItem[] = [];
   rawData.forEach((item, index, arr) => {
-    console.log(item.availableOrientation);
+    console.log(item.availableorientations);
     const newData: ICargoItem = {
       key: index,
       code: item.code,
@@ -220,7 +230,7 @@ function createCargoObj(rawData: RawCargo[]): ICargoItem[] {
       length: item.dimension.a,
       width: item.dimension.b,
       hight: item.dimension.c,
-      availableOrientation: item.availableOrientation,
+      availableOrientation: item.availableorientations,
     };
     res.push(newData);
   });
@@ -336,42 +346,7 @@ const childrenCargoData = reactive({
   mass: 0,
   quantity: 0,
   avialableOrientation: {
-    first: {
-      index: 0,
-      bearing: true,
-      bearingLevel: 0,
-      stackingLimit: 0,
-    },
-    second: {
-      index: 0,
-      bearing: true,
-      bearingLevel: 0,
-      stackingLimit: 0,
-    },
-    third: {
-      index: 0,
-      bearing: true,
-      bearingLevel: 0,
-      stackingLimit: 0,
-    },
-    fourth: {
-      index: 0,
-      bearing: true,
-      bearingLevel: 0,
-      stackingLimit: 0,
-    },
-    fifth: {
-      index: 0,
-      bearing: true,
-      bearingLevel: 0,
-      stackingLimit: 0,
-    },
-    sixth: {
-      index: 0,
-      bearing: true,
-      bearingLevel: 0,
-      stackingLimit: 0,
-    },
+    
   }
 });
 const columns = createColumns(
@@ -397,8 +372,9 @@ const onFormDataSubmit = (form: IChangeTruckForm) => {
   data.value[index].quantity = form.quantity;
   showModal.value = false;
 };
+
 const CargoColumns = createCargoColumns(
-  // 定义运行函数，传入当前货车行数据
+  // 定义运行函数，传入当前货物行数据
   (rowData: ICargoItem) => {
     console.log(rowData);
     childrenCargoData.key = rowData.key;
@@ -407,6 +383,7 @@ const CargoColumns = createCargoColumns(
     childrenCargoData.dimension.length = rowData.length;
     childrenCargoData.mass = rowData.mass;
     childrenCargoData.quantity = rowData.quantity;
+    childrenCargoData.avialableOrientation = rowData.availableOrientation;
     showModal.value = true;
   }
 );
