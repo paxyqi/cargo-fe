@@ -56,7 +56,7 @@
         </n-layout-content>
       </n-layout>
     </n-card>
-    <n-modal v-model:show="showModal" :mask-closable="false">
+    <n-modal v-model:show="showCargoModal" :mask-closable="false">
       <n-card>
         <CargoInput
           :init-value="childrenCargoData"
@@ -342,6 +342,7 @@ const handleCheck = (rowKeys: RowKey[]) => {
   checkedRowKeysRef.value = rowKeys;
 };
 const showModal = ref(false);
+const showCargoModal = ref(false);
 // 货车子组件
 const childrenData = reactive({
   key: 0,
@@ -413,7 +414,7 @@ const CargoColumns = createCargoColumns(
     childrenCargoData.mass = rowData.mass;
     childrenCargoData.quantity = rowData.quantity;
     childrenCargoData.availableOrientation = rowData.availableOrientation;
-    showModal.value = true;
+    showCargoModal.value = true;
   }
 );
 const onCargoFormDataSubmit = (form: IChangeCargoForm) => {
@@ -424,7 +425,8 @@ const onCargoFormDataSubmit = (form: IChangeCargoForm) => {
   cargoData.value[index].length = form.dimension.length,
   cargoData.value[index].mass = form.mass;
   cargoData.value[index].quantity = form.quantity;
-  showModal.value = false;
+  cargoData.value[index].availableOrientation = form.availableOrientation;
+  showCargoModal.value = false;
 };
 const pagination = { pageSize: 10 };
 </script>
