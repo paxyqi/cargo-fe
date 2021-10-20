@@ -25,7 +25,7 @@
           <n-input-number
             placeholder="输入货车车厢宽度"
             v-model:value="formValue.dimension.width"
-          />
+          /> 
         </n-form-item>
         <n-form-item label="高度" path="dimension.hight">
           <n-input-number
@@ -52,9 +52,6 @@
         </n-form-item>
       </n-form>
     </n-space>
-    <!-- <p>
-      {{ JSON.stringify(initValue) }}
-    </p> -->
   </div>
 </template>
 
@@ -68,9 +65,6 @@ import {
   NButton,
   NSpace,
   NIcon,
-  NH1,
-  NLayout,
-  NCard,
 } from "naive-ui";
 import { ListCircleOutline } from "@vicons/ionicons5";
 const formRef = ref(null);

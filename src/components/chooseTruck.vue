@@ -60,13 +60,14 @@
       <n-card>
         <CargoInput
           :init-value="childrenCargoData"
-          @formSubmit="onFormDataSubmit"
+          @formSubmit="onCargoFormDataSubmit"
         />
       </n-card>
     </n-modal>
   </div>
 </template>
 <script lang="ts" setup>
+const destinationURL = "http://10.128.247.104:8080";
 import { ref, h, Ref, reactive } from "vue";
 import {
   NDataTable,
@@ -78,6 +79,7 @@ import {
   NH1,
   NIcon,
   NModal,
+  NDropdown,
   useNotification,
 } from "naive-ui";
 import { CarOutline, CartSharp } from "@vicons/ionicons5";
@@ -85,14 +87,17 @@ import { ITruckItem } from "../model/truck";
 import { RawTruck } from "../model/rawTruckData";
 import { RawCargo } from "../model/rawCargoData";
 import { IChangeTruckForm } from "../model/changeTruck";
+import { IChangeCargoForm } from "../model/changeCargo";
 import { ICargoItem } from "../model/cargo";
-import TruckInput from "./TruckInput.vue";
-import cargoInputVue from "./cargoInput.vue";
+import { Orientation } from "../model/orientation";
+import TruckInput from "./truckInput.vue";
+import CargoInput from "./cargoInput.vue";
 import {
   RowKey,
   TableSelectionColumn,
 } from "naive-ui/lib/data-table/src/interface";
-import CargoInput from "./cargoInput.vue";
+
+
 // 货车列名称
 const createColumns = (change: (rowData: ITruckItem) => void) => [
   {
@@ -177,10 +182,23 @@ const createCargoColumns = (change: (rowData: ICargoItem) => void) => [
     key: "quantity",
   },
   // 货物各方向负载不方便在一行内展示，考虑在更改里面可见
-  // {
-  //   title: "各方向负载极限",
-  //   key: "availableorientation",
-  // },
+  {
+    title: "各方向负载极限",
+    key: "availableOrientation",
+    render(row: ICargoItem) {
+      return h(
+        // 渲染组件
+        NDropdown,
+        {
+          // 通过h函数创建虚拟NButton节点
+          size: "small",
+          trigger: "hover",
+          // options: row.availableOrientation,
+        },
+        { default: () => "修改参数" }
+      )
+    }
+  },
   {
     title: "更改",
     key: "change",
@@ -249,7 +267,7 @@ let cargoDataList: ICargoItem[] = [];
 
 // 异步获取货车数据
 const getData = async () => {
-  const getTruckTypeURL = "http://10.128.247.104:8080/get-repository";
+  const getTruckTypeURL = destinationURL + "/get-repository";
   const body = JSON.stringify({
     // 获取货车类型信息
     repositoryname: "truck-type-repository",
@@ -258,7 +276,7 @@ const getData = async () => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "http://10.128.247.104",
+      "Access-Control-Allow-Origin": destinationURL,
       "Access-Control-Allow-Methods": "GET, POST",
     },
     body: body,
@@ -283,7 +301,7 @@ const getData = async () => {
 
 // 异步获取货物数据
 const getCargoData = async () => {
-  const getCargoTypeURL = "http://10.128.247.104:8080/get-repository";
+  const getCargoTypeURL = destinationURL + "/get-repository";
   const body = JSON.stringify({
     // 获取货物类型信息
     repositoryname: "cargo-type-repository",
@@ -292,7 +310,7 @@ const getCargoData = async () => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "http://10.128.247.104",
+      "Access-Control-Allow-Origin": destinationURL,
       "Access-Control-Allow-Methods": "GET, POST",
     },
     body: body,
@@ -336,6 +354,12 @@ const childrenData = reactive({
   quantity: 0,
 });
 // 货物子组件
+const emptyOrientation:Orientation = {
+  index: 0,
+  bearing: true,
+  bearinglevel: 0,
+  stackinglimit: 0,
+};
 const childrenCargoData = reactive({
   key: 0,
   dimension: {
@@ -345,9 +369,14 @@ const childrenCargoData = reactive({
   },
   mass: 0,
   quantity: 0,
-  avialableOrientation: {
-    
-  }
+  availableOrientation: [
+    emptyOrientation,
+    emptyOrientation,
+    emptyOrientation,
+    emptyOrientation,
+    emptyOrientation,
+    emptyOrientation,
+  ],
 });
 const columns = createColumns(
   // 定义运行函数，传入当前货车行数据
@@ -383,9 +412,19 @@ const CargoColumns = createCargoColumns(
     childrenCargoData.dimension.length = rowData.length;
     childrenCargoData.mass = rowData.mass;
     childrenCargoData.quantity = rowData.quantity;
-    childrenCargoData.avialableOrientation = rowData.availableOrientation;
+    childrenCargoData.availableOrientation = rowData.availableOrientation;
     showModal.value = true;
   }
 );
+const onCargoFormDataSubmit = (form: IChangeCargoForm) => {
+  console.log(form);
+  const index = cargoData.value.findIndex((item) => item.key === form.key);
+  cargoData.value[index].hight = form.dimension.hight,
+  cargoData.value[index].width = form.dimension.width,
+  cargoData.value[index].length = form.dimension.length,
+  cargoData.value[index].mass = form.mass;
+  cargoData.value[index].quantity = form.quantity;
+  showModal.value = false;
+};
 const pagination = { pageSize: 10 };
 </script>
