@@ -181,24 +181,24 @@ const createCargoColumns = (change: (rowData: ICargoItem) => void) => [
     title: "数量",
     key: "quantity",
   },
-  // 货物各方向负载不方便在一行内展示，考虑在更改里面可见
-  {
-    title: "各方向负载极限",
-    key: "availableOrientation",
-    render(row: ICargoItem) {
-      return h(
-        // 渲染组件
-        NDropdown,
-        {
-          // 通过h函数创建虚拟NButton节点
-          size: "small",
-          trigger: "hover",
-          // options: row.availableOrientation,
-        },
-        { default: () => "修改参数" }
-      )
-    }
-  },
+  // // 货物各方向负载不方便在一行内展示，考虑在更改里面可见
+  // {
+  //   title: "各方向负载极限",
+  //   key: "availableOrientation",
+  //   render(row: ICargoItem) {
+  //     return h(
+  //       // 渲染组件
+  //       NDropdown,
+  //       {
+  //         // 通过h函数创建虚拟NButton节点
+  //         size: "small",
+  //         trigger: "hover",
+  //         // options: row.availableOrientation,
+  //       },
+  //       { default: () => "悬停查看" }
+  //     )
+  //   }
+  // },
   {
     title: "更改",
     key: "change",
