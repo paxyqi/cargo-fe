@@ -16,6 +16,7 @@ module.exports = {
   plugins: ["vue", "@typescript-eslint", "prettier"],
   rules: {
     "vue/no-v-model-argument": "off",
+    "require-jsdoc": "off",
   },
   settings: {
     "import/resolver": {

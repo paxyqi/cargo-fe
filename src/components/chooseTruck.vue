@@ -79,7 +79,6 @@ import {
   NH1,
   NIcon,
   NModal,
-  NDropdown,
   useNotification,
 } from "naive-ui";
 import { CarOutline, CartSharp } from "@vicons/ionicons5";
@@ -96,7 +95,6 @@ import {
   RowKey,
   TableSelectionColumn,
 } from "naive-ui/lib/data-table/src/interface";
-
 
 // 货车列名称
 const createColumns = (change: (rowData: ITruckItem) => void) => [
@@ -255,7 +253,6 @@ function createCargoObj(rawData: RawCargo[]): ICargoItem[] {
   return res;
 }
 
-
 const notice = useNotification();
 // 货车数据绑定在data，通过url获得的存在dataList里面
 const data: Ref<ITruckItem[]> = ref([]);
@@ -355,7 +352,7 @@ const childrenData = reactive({
   quantity: 0,
 });
 // 货物子组件
-const emptyOrientation:Orientation = {
+const emptyOrientation: Orientation = {
   index: 0,
   bearing: true,
   bearinglevel: 0,
@@ -395,10 +392,10 @@ const columns = createColumns(
 const onFormDataSubmit = (form: IChangeTruckForm) => {
   console.log(form);
   const index = data.value.findIndex((item) => item.key === form.key);
-  data.value[index].hight = form.dimension.hight,
-  data.value[index].width = form.dimension.width,
-  data.value[index].length = form.dimension.length,
-  data.value[index].maxLoad = form.maxLoad;
+  (data.value[index].hight = form.dimension.hight),
+    (data.value[index].width = form.dimension.width),
+    (data.value[index].length = form.dimension.length),
+    (data.value[index].maxLoad = form.maxLoad);
   data.value[index].quantity = form.quantity;
   showModal.value = false;
 };
@@ -420,10 +417,10 @@ const CargoColumns = createCargoColumns(
 const onCargoFormDataSubmit = (form: IChangeCargoForm) => {
   console.log(form);
   const index = cargoData.value.findIndex((item) => item.key === form.key);
-  cargoData.value[index].hight = form.dimension.hight,
-  cargoData.value[index].width = form.dimension.width,
-  cargoData.value[index].length = form.dimension.length,
-  cargoData.value[index].mass = form.mass;
+  (cargoData.value[index].hight = form.dimension.hight),
+    (cargoData.value[index].width = form.dimension.width),
+    (cargoData.value[index].length = form.dimension.length),
+    (cargoData.value[index].mass = form.mass);
   cargoData.value[index].quantity = form.quantity;
   cargoData.value[index].availableOrientation = form.availableOrientation;
   showCargoModal.value = false;
