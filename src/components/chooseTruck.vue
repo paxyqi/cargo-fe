@@ -340,6 +340,8 @@ getCargoData();
 const checkedRowKeysRef: Ref<RowKey[]> = ref([]);
 const handleCheck = (rowKeys: RowKey[]) => {
   checkedRowKeysRef.value = rowKeys;
+  console.log(checkedRowKeysRef.value);
+  data.value.findIndex()
 };
 const showModal = ref(false);
 const showCargoModal = ref(false);
