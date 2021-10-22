@@ -5,7 +5,8 @@
 		"dev": "vite --port 8000",
 		"build": "vue-tsc --noEmit && vite build",
 		"serve": "vite preview",
-		"test": "eslint  --ext .ts,.vue --ignore-path .gitignore ."
+		"test": "eslint  --ext .ts,.vue --ignore-path .gitignore .",
+		"prepare": "husky install"
 	},
 	"dependencies": {
 		"cors": "^2.8.5",
@@ -32,7 +33,7 @@
 		"eslint-import-resolver-typescript": "^2.5.0",
 		"eslint-plugin-import": "^2.24.2",
 		"eslint-plugin-vue": "^7.18.0",
-		"husky": "^7.0.4",
+		"husky": "^7.0.0",
 		"naive-ui": "^2.19.2",
 		"prettier": "^2.4.1",
 		"prettier-eslint": "^13.0.0",
