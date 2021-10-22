@@ -50,7 +50,7 @@
               :data="cargoData"
               :pagination="pagination"
               :row-key="(row) => row.code"
-              @update:checked-row-keys="handleCheck"
+              @update:checked-row-keys="handleCargoCheck"
             />
           </div>
         </n-layout-content>
@@ -64,6 +64,9 @@
         />
       </n-card>
     </n-modal>
+    <br />
+    <br />
+    <button @click="send">确定</button>
   </div>
 </template>
 <script lang="ts" setup>
@@ -89,6 +92,10 @@ import { IChangeTruckForm } from "../model/changeTruck";
 import { IChangeCargoForm } from "../model/changeCargo";
 import { ICargoItem } from "../model/cargo";
 import { Orientation } from "../model/orientation";
+import { TruckSpec } from "../model/truckSpec";
+import { CargoSpec } from "../model/cargoSpec";
+import { OrderSpec } from "../model/orderSpec";
+import { Task } from "../model/task";
 import TruckInput from "./truckInput.vue";
 import CargoInput from "./cargoInput.vue";
 import {
@@ -335,10 +342,116 @@ getData();
 getCargoData();
 
 const checkedRowKeysRef: Ref<RowKey[]> = ref([]);
-const handleCheck = (rowKeys: RowKey[]) => {
+// 获得当前页面被选中的货车的index数组
+let truckCheckedArr: number[] = [];
+const handleCheck = (rowKeys: RowKey[]): number[] => {
   checkedRowKeysRef.value = rowKeys;
   console.log(checkedRowKeysRef.value);
-  data.value.findIndex()
+  const indexArr: number[] = [];
+  rowKeys.forEach((rowKey) => {
+    indexArr.push(
+      data.value.findIndex((truckItem) => truckItem.code == rowKey)
+    );
+  });
+  console.log(indexArr);
+  truckCheckedArr = indexArr;
+  return indexArr;
+};
+// 获得当前页面被选中的货物的index数组
+let cargoCheckedArr: number[] = [];
+const handleCargoCheck = (rowKeys: RowKey[]): number[] => {
+  checkedRowKeysRef.value = rowKeys;
+  console.log(checkedRowKeysRef.value);
+  const indexArr: number[] = [];
+  rowKeys.forEach((rowKey) => {
+    indexArr.push(
+      cargoData.value.findIndex((cargoItem) => cargoItem.code == rowKey)
+    );
+  });
+  console.log(indexArr);
+  cargoCheckedArr = indexArr;
+  return indexArr;
+};
+
+// 监听选择完货车数据和货物数据之后整合形成用于发送的body
+const setSendBody = (): Task => {
+  if (cargoCheckedArr.length > 0 && truckCheckedArr.length > 0) {
+    // 货车和货物均check之后方可执行
+    console.log(truckCheckedArr);
+    console.log(cargoCheckedArr);
+    const truckSpecArr: TruckSpec[] = [];
+    const cargoSpecArr: CargoSpec[] = [];
+    truckCheckedArr.forEach((index) => {
+      const newTruckSpec: TruckSpec = {
+        code: data.value[index].code,
+        amount: data.value[index].quantity,
+      };
+      truckSpecArr.push(newTruckSpec);
+    });
+    cargoCheckedArr.forEach((index) => {
+      const newCargoSpec: CargoSpec = {
+        code: cargoData.value[index].code,
+        amount: cargoData.value[index].quantity,
+      };
+      cargoSpecArr.push(newCargoSpec);
+    });
+    const orderSpecArr: OrderSpec[] = [
+      {
+        code: "",
+        priority: 1,
+        cargospecs: cargoSpecArr,
+      },
+    ];
+    const res: Task = {
+      userid: "",
+      note: "",
+      truckspecs: truckSpecArr,
+      orderspecs: orderSpecArr,
+    };
+    console.log("this is set send body");
+    console.log(res);
+    return res;
+  } else {
+    // 否则返回空对象
+    const res: Task = {
+      userid: "",
+      note: "",
+      truckspecs: [],
+      orderspecs: [],
+    };
+    return res;
+  }
+};
+const send = async () => {
+  const sendURL = destinationURL + "/solve";
+  const obj = setSendBody();
+  const body = JSON.stringify({
+    task: obj,
+  });
+  console.log(body);
+  await fetch(sendURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": destinationURL,
+      "Access-Control-Allow-Methods": "GET, POST",
+    },
+    body: body,
+    credentials: "include",
+    mode: "cors",
+  })
+    .then((response) => response.json())
+    .then((responseText) => {
+      console.log(responseText);
+    })
+    .catch((e) => {
+      notice.create({
+        title: "错误",
+        content: e.toString(),
+        duration: 10000,
+        type: "error",
+      });
+    });
 };
 const showModal = ref(false);
 const showCargoModal = ref(false);
