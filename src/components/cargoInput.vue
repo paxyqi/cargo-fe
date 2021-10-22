@@ -16,107 +16,169 @@
         show-require-mark
       >
         <n-form-item label="长度" rule-path="dimension.length">
-          <n-input-number
-            v-model:value="formValue.dimension.length"
-          />
+          <n-input-number v-model:value="formValue.dimension.length" />
         </n-form-item>
         <n-form-item label="宽度" path="dimension.width">
-          <n-input-number
-            v-model:value="formValue.dimension.width"
-          />
+          <n-input-number v-model:value="formValue.dimension.width" />
         </n-form-item>
         <n-form-item label="高度" path="dimension.hight">
-          <n-input-number
-            v-model:value="formValue.dimension.hight"
-          />
+          <n-input-number v-model:value="formValue.dimension.hight" />
         </n-form-item>
         <n-form-item label="重量" path="mass">
-          <n-input-number
-            v-model:value="formValue.mass"
-          />
+          <n-input-number v-model:value="formValue.mass" />
         </n-form-item>
-        <n-form-item v-if="size >= 1" label="①朝向能否堆叠" path="availableOrientation[0].bearing">
-          <n-switch v-model:value="formValue.availableOrientation[0].bearing"/>
+        <n-form-item
+          v-if="size >= 1"
+          label="①朝向能否堆叠"
+          path="availableOrientation[0].bearing"
+        >
+          <n-switch v-model:value="formValue.availableOrientation[0].bearing" />
         </n-form-item>
-        <n-form-item v-if="size >= 1" label="①朝向承受极限" path="availableOrientation[0].bearinglevel">
+        <n-form-item
+          v-if="size >= 1"
+          label="①朝向承受极限"
+          path="availableOrientation[0].bearinglevel"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[0].bearinglevel"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 1" label="①朝向堆叠极限" path="availableOrientation[0].stackinglimit">
+        <n-form-item
+          v-if="size >= 1"
+          label="①朝向堆叠极限"
+          path="availableOrientation[0].stackinglimit"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[0].stackinglimit"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 2" label="②朝向能否堆叠" path="availableOrientation[1].bearing">
-          <n-switch v-model:value="formValue.availableOrientation[1].bearing"/>
+        <n-form-item
+          v-if="size >= 2"
+          label="②朝向能否堆叠"
+          path="availableOrientation[1].bearing"
+        >
+          <n-switch v-model:value="formValue.availableOrientation[1].bearing" />
         </n-form-item>
-        <n-form-item v-if="size >= 2" label="②朝向承受极限" path="availableOrientation[1].bearinglevel">
+        <n-form-item
+          v-if="size >= 2"
+          label="②朝向承受极限"
+          path="availableOrientation[1].bearinglevel"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[1].bearinglevel"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 2" label="②朝向堆叠极限" path="availableOrientation[1].stackinglimit">
+        <n-form-item
+          v-if="size >= 2"
+          label="②朝向堆叠极限"
+          path="availableOrientation[1].stackinglimit"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[1].stackinglimit"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 3" label="③朝向能否堆叠" path="availableOrientation[2].bearing">
-          <n-switch v-model:value="formValue.availableOrientation[2].bearing"/>
+        <n-form-item
+          v-if="size >= 3"
+          label="③朝向能否堆叠"
+          path="availableOrientation[2].bearing"
+        >
+          <n-switch v-model:value="formValue.availableOrientation[2].bearing" />
         </n-form-item>
-        <n-form-item v-if="size >= 3" label="③朝向承受极限" path="availableOrientation[2].bearinglevel">
+        <n-form-item
+          v-if="size >= 3"
+          label="③朝向承受极限"
+          path="availableOrientation[2].bearinglevel"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[2].bearinglevel"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 3" label="③朝向堆叠极限" path="availableOrientation[2].stackinglimit">
+        <n-form-item
+          v-if="size >= 3"
+          label="③朝向堆叠极限"
+          path="availableOrientation[2].stackinglimit"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[2].stackinglimit"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 4" label="④朝向能否堆叠" path="availableOrientation[3].bearing">
-          <n-switch v-model:value="formValue.availableOrientation[3].bearing"/>
+        <n-form-item
+          v-if="size >= 4"
+          label="④朝向能否堆叠"
+          path="availableOrientation[3].bearing"
+        >
+          <n-switch v-model:value="formValue.availableOrientation[3].bearing" />
         </n-form-item>
-        <n-form-item v-if="size >= 4" label="④朝向承受极限" path="availableOrientation[3].bearinglevel">
+        <n-form-item
+          v-if="size >= 4"
+          label="④朝向承受极限"
+          path="availableOrientation[3].bearinglevel"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[3].bearinglevel"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 4" label="④朝向堆叠极限" path="availableOrientation[3].stackinglimit">
+        <n-form-item
+          v-if="size >= 4"
+          label="④朝向堆叠极限"
+          path="availableOrientation[3].stackinglimit"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[3].stackinglimit"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 5" label="⑤朝向能否堆叠" path="availableOrientation[4].bearing">
-          <n-switch v-model:value="formValue.availableOrientation[4].bearing"/>
+        <n-form-item
+          v-if="size >= 5"
+          label="⑤朝向能否堆叠"
+          path="availableOrientation[4].bearing"
+        >
+          <n-switch v-model:value="formValue.availableOrientation[4].bearing" />
         </n-form-item>
-        <n-form-item v-if="size >= 5" label="⑤朝向承受极限" path="availableOrientation[4].bearinglevel">
+        <n-form-item
+          v-if="size >= 5"
+          label="⑤朝向承受极限"
+          path="availableOrientation[4].bearinglevel"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[4].bearinglevel"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 5" label="⑤朝向堆叠极限" path="availableOrientation[4].stackinglimit">
+        <n-form-item
+          v-if="size >= 5"
+          label="⑤朝向堆叠极限"
+          path="availableOrientation[4].stackinglimit"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[4].stackinglimit"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 6" label="⑥朝向能否堆叠" path="availableOrientation[5].bearing">
-          <n-switch v-model:value="formValue.availableOrientation[5].bearing"/>
+        <n-form-item
+          v-if="size >= 6"
+          label="⑥朝向能否堆叠"
+          path="availableOrientation[5].bearing"
+        >
+          <n-switch v-model:value="formValue.availableOrientation[5].bearing" />
         </n-form-item>
-        <n-form-item v-if="size >= 6" label="⑥朝向承受极限" path="availableOrientation[5].bearinglevel">
+        <n-form-item
+          v-if="size >= 6"
+          label="⑥朝向承受极限"
+          path="availableOrientation[5].bearinglevel"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[5].bearinglevel"
           />
         </n-form-item>
-        <n-form-item v-if="size >= 6" label="⑥朝向堆叠极限" path="availableOrientation[5].stackinglimit">
+        <n-form-item
+          v-if="size >= 6"
+          label="⑥朝向堆叠极限"
+          path="availableOrientation[5].stackinglimit"
+        >
           <n-input-number
             v-model:value="formValue.availableOrientation[5].stackinglimit"
           />
         </n-form-item>
         <n-form-item label="数量" path="quantity">
-          <n-input-number
-            v-model:value="formValue.quantity"
-          />
+          <n-input-number v-model:value="formValue.quantity" />
         </n-form-item>
         <n-form-item>
           <div class="checkButton">
@@ -130,12 +192,11 @@
 
 <script lang="ts" setup>
 import { ref, toRefs } from "vue";
-import { IChangeCargoForm } from "../model/changeCargo"; 
+import { IChangeCargoForm } from "../model/changeCargo";
 import {
   NForm,
   NFormItem,
   NInputNumber,
-  NInput,
   NButton,
   NSpace,
   NIcon,

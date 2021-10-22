@@ -25,7 +25,7 @@
           <n-input-number
             placeholder="输入货车车厢宽度"
             v-model:value="formValue.dimension.width"
-          /> 
+          />
         </n-form-item>
         <n-form-item label="高度" path="dimension.hight">
           <n-input-number
