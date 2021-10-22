@@ -1,40 +1,51 @@
 {
-  "name": "cargo-fe",
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite --port 8000",
-    "build": "vue-tsc --noEmit && vite build",
-    "serve": "vite preview"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "js-cookie": "^3.0.1",
-    "vue": "^3.2.13",
-    "vue-cookie": "^1.1.4",
-    "vue-cookies": "^1.7.4",
-    "vue-router": "^4.0.11",
-    "xicons": "^1.0.0"
-  },
-  "devDependencies": {
-    "@types/js-cookie": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.32.0",
-    "@typescript-eslint/parser": "^4.32.0",
-    "@vicons/ionicons5": "^0.11.0",
-    "@vicons/utils": "^0.1.4",
-    "@vitejs/plugin-vue": "^1.9.2",
-    "@vue/eslint-config-prettier": "^6.0.0",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-google": "^0.14.0",
-    "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-vue": "^7.18.0",
-    "naive-ui": "^2.19.2",
-    "prettier": "^2.4.1",
-    "prettier-eslint": "^13.0.0",
-    "rollup-plugin-uglify": "^6.0.4",
-    "typescript": "^4.4.3",
-    "vite": "^2.5.10",
-    "vue-tsc": "^0.3.0"
-  }
+	"name": "cargo-fe",
+	"version": "0.0.0",
+	"scripts": {
+		"dev": "vite --port 8000",
+		"build": "vue-tsc --noEmit && vite build",
+		"serve": "vite preview",
+		"test": "eslint  --ext .ts,.vue --ignore-path .gitignore ."
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"js-cookie": "^3.0.1",
+		"vue": "^3.2.13",
+		"vue-cookie": "^1.1.4",
+		"vue-cookies": "^1.7.4",
+		"vue-router": "^4.0.11",
+		"xicons": "^1.0.0"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^13.2.1",
+		"@commitlint/config-conventional": "^13.2.0",
+		"@types/js-cookie": "^3.0.0",
+		"@typescript-eslint/eslint-plugin": "^4.32.0",
+		"@typescript-eslint/parser": "^4.32.0",
+		"@vicons/ionicons5": "^0.11.0",
+		"@vicons/utils": "^0.1.4",
+		"@vitejs/plugin-vue": "^1.9.2",
+		"@vue/eslint-config-prettier": "^6.0.0",
+		"eslint": "^7.32.0",
+		"eslint-config-airbnb-base": "^14.2.1",
+		"eslint-config-google": "^0.14.0",
+		"eslint-import-resolver-typescript": "^2.5.0",
+		"eslint-plugin-import": "^2.24.2",
+		"eslint-plugin-vue": "^7.18.0",
+		"husky": "^7.0.4",
+		"naive-ui": "^2.19.2",
+		"prettier": "^2.4.1",
+		"prettier-eslint": "^13.0.0",
+		"rollup-plugin-uglify": "^5.0.2",
+		"typescript": "^4.4.3",
+		"vite": "^2.5.10",
+		"vue-tsc": "^0.3.0"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm test",
+			"pre-push": "npm test",
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+		}
+	}
 }

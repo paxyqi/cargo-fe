@@ -1,5 +1,5 @@
 import { Orientation } from "./orientation";
-export interface ICargoItem{
+export interface ICargoItem {
   key: number;
   code: string;
   name: string;
