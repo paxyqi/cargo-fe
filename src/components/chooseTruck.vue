@@ -70,7 +70,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-const destinationURL = "http://10.128.247.104:8080";
+const destinationURL = "http://10.128.235.40:8080";
 import { ref, h, Ref, reactive } from "vue";
 import {
   NDataTable,
