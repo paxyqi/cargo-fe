@@ -10,10 +10,12 @@
       <n-button type="warning" id="stop-loop">停止刷新</n-button>
       <n-button type="warning" id="resume-loop">恢复刷新</n-button>
     </n-space>
+    <canvas-view></canvas-view>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { NButton, NSpace } from "naive-ui";
 import {} from "p5";
+import CanvasView from "./canvasView.vue";
 </script>
