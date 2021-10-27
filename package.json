@@ -2,16 +2,19 @@
 	"name": "cargo-fe",
 	"version": "0.0.0",
 	"scripts": {
-		"dev": "vite --port 8000",
+		"dev": "vite --port 9666",
 		"build": "vue-tsc --noEmit && vite build",
 		"serve": "vite preview",
 		"test": "eslint  --ext .ts,.vue --ignore-path .gitignore .",
 		"prepare": "husky install"
 	},
 	"dependencies": {
+		"@types/three": "^0.133.1",
 		"cors": "^2.8.5",
 		"js-cookie": "^3.0.1",
 		"p5": "^1.1.9",
+		"three": "^0.127.0",
+		"troisjs": "^0.3.2",
 		"vue": "^3.2.13",
 		"vue-cookie": "^1.1.4",
 		"vue-cookies": "^1.7.4",
