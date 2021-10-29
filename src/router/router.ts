@@ -44,14 +44,6 @@ const router = createRouter({
       },
       component: () => import("../components/three.vue"),
     },
-    {
-      path: "/trois",
-      name: "trois",
-      meta: {
-        title: "结果展示",
-      },
-      component: () => import("../components/trois.vue"),
-    },
   ],
 });
 

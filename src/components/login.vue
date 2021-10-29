@@ -63,13 +63,13 @@ const login = async () => {
     user_name: userName.value,
     pass_word: passwd.value,
   });
-  const loginURL = "http://10.128.235.40:8080";
+  const loginURL = "http://10.128.215.232:8080";
   await fetch(loginURL, {
     // 发送请求
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "http://10.128.235.40",
+      "Access-Control-Allow-Origin": "http://10.128.215.232",
       "Access-Control-Allow-Methods": "GET, POST",
     },
     credentials: "include",

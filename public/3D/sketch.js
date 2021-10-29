@@ -103,8 +103,8 @@ var easycam = null;
 
 // p5.js related
 const p5Config = {
-    canvasWidth: 800,
-    canvasHeight: 600,
+    canvasWidth: 1600,
+    canvasHeight: 1200,
     sketchId: 'sketch',
     axisScaleFactor: 1.3,
 };
