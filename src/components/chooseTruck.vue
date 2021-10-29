@@ -66,15 +66,20 @@
     </n-modal>
     <br />
     <br />
-    <button @click="send">确定</button>
+    <br />
+    <n-space justify="center">
+      <n-button @click="send">发送订单</n-button>
+      <n-button @click="show">显示效果</n-button>
+    </n-space>
   </div>
 </template>
 <script lang="ts" setup>
-const destinationURL = "http://10.128.235.40:8080";
+const destinationURL = "http://10.128.215.232:8080";
 import { ref, h, Ref, reactive } from "vue";
 import {
   NDataTable,
   NButton,
+  NSpace,
   NCard,
   NLayout,
   NLayoutHeader,
@@ -186,24 +191,6 @@ const createCargoColumns = (change: (rowData: ICargoItem) => void) => [
     title: "数量",
     key: "quantity",
   },
-  // // 货物各方向负载不方便在一行内展示，考虑在更改里面可见
-  // {
-  //   title: "各方向负载极限",
-  //   key: "availableOrientation",
-  //   render(row: ICargoItem) {
-  //     return h(
-  //       // 渲染组件
-  //       NDropdown,
-  //       {
-  //         // 通过h函数创建虚拟NButton节点
-  //         size: "small",
-  //         trigger: "hover",
-  //         // options: row.availableOrientation,
-  //       },
-  //       { default: () => "悬停查看" }
-  //     )
-  //   }
-  // },
   {
     title: "更改",
     key: "change",
@@ -422,6 +409,8 @@ const setSendBody = (): Task => {
     return res;
   }
 };
+let plan = {};
+let encode = "";
 const send = async () => {
   const sendURL = destinationURL + "/solve";
   const obj = setSendBody();
@@ -443,6 +432,11 @@ const send = async () => {
     .then((response) => response.json())
     .then((responseText) => {
       console.log(responseText);
+      plan = responseText.body;
+      console.log(plan);
+      console.log(JSON.stringify(plan));
+      encode = window.btoa(JSON.stringify(plan));
+      console.log(encode);
     })
     .catch((e) => {
       notice.create({
@@ -453,6 +447,10 @@ const send = async () => {
       });
     });
 };
+function show() {
+  console.log(encode);
+  window.open("../../public/3D/index.html?json=" + encode);
+}
 const showModal = ref(false);
 const showCargoModal = ref(false);
 // 货车子组件
