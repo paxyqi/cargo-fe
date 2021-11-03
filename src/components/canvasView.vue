@@ -1,8 +1,5 @@
 <template>
-  <Sketch
-    :additional-events="[]"
-    v-on="{ setup, draw, keypressed, mouseClicked }"
-  />
+  <Sketch :additional-events="[]" v-on="{ setup, draw, keypressed }" />
 </template>
 <script lang="ts" setup>
 import p5 from "p5";
@@ -81,7 +78,7 @@ const plan = {
   ],
 };
 const setup = (p: p5) => {
-  p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+  p.createCanvas(p.windowWidth, p.windowHeight * 0.85, p.WEBGL);
   p.background(0);
 };
 let camerafocus = {
@@ -89,18 +86,10 @@ let camerafocus = {
   y: 0,
   z: 0,
 };
-const truckIndex = 0;
-const blockNum = plan.truckschemes[0].cargoblocks.length;
-const angles = {
-  h: Math.PI / 4,
-  v: Math.PI / 4,
-};
-const distance = 400;
+
 const draw = (p: p5) => {
   p.background(250);
   p.fill(255);
-  p.textSize(32);
-  p.text("Hello World", p.width / 2, p.height / 2);
 
   nextColor = 0;
 
@@ -131,7 +120,6 @@ const keypressed = (p: p5, key: string) => {
     console.log("s pressed");
   }
 };
-const mouseClicked = (p: p5) => {};
 const uiConfig = {
   sketchId: "sketch",
   axisScaleFactor: 1.3,
@@ -241,13 +229,99 @@ const drawBlock = (
 </script>
 
 <script lang="ts">
+const plan1 = {
+  truckschemes: [
+    {
+      truckdimension: {
+        a: 100,
+        b: 300,
+        c: 200,
+      },
+      cargoblocks: [
+        {
+          cargodimension: {
+            a: 30,
+            b: 20,
+            c: 10,
+          },
+          basecorner: {
+            a: 0,
+            b: 0,
+            c: 0,
+          },
+          repeation: {
+            a: 1,
+            b: 5,
+            c: 20,
+          },
+        },
+        {
+          cargodimension: {
+            a: 30,
+            b: 20,
+            c: 10,
+          },
+          basecorner: {
+            a: 30,
+            b: 0,
+            c: 0,
+          },
+          repeation: {
+            a: 1,
+            b: 5,
+            c: 20,
+          },
+        },
+      ],
+    },
+    {
+      truckdimension: {
+        a: 100,
+        b: 250,
+        c: 200,
+      },
+      cargoblocks: [
+        {
+          cargodimension: {
+            a: 30,
+            b: 20,
+            c: 10,
+          },
+          basecorner: {
+            a: 0,
+            b: 0,
+            c: 0,
+          },
+          repeation: {
+            a: 1,
+            b: 5,
+            c: 20,
+          },
+        },
+      ],
+    },
+  ],
+};
+const uiExportConfig = {
+  sketchId: "sketch",
+  axisScaleFactor: 1.3,
+  rotationSpeed: 0.05,
+  zoomSpeed: 0.1,
+};
+let truckIndex = 0;
+let blockNum = plan1.truckschemes[0].cargoblocks.length;
+const angles = {
+  h: Math.PI / 4,
+  v: Math.PI / 4,
+};
+let distance = 400;
 export function displayPreviousTruck() {
   truckIndex = Math.max(truckIndex - 1, 0);
-  blockNum = plan.truckschemes[truckIndex].cargoblocks.length;
+  blockNum = plan1.truckschemes[truckIndex].cargoblocks.length;
 }
 export function displayNextTruck() {
-  truckIndex = Math.min(truckIndex + 1, plan.truckschemes.length - 1);
-  blockNum = plan.truckschemes[truckIndex].cargoblocks.length;
+  truckIndex = Math.min(truckIndex + 1, plan1.truckschemes.length - 1);
+  blockNum = plan1.truckschemes[truckIndex].cargoblocks.length;
 }
 export function displayPreviousStep() {
   blockNum = Math.max(blockNum - 1, 0);
@@ -255,25 +329,28 @@ export function displayPreviousStep() {
 export function displayNextStep() {
   blockNum = Math.min(
     blockNum + 1,
-    plan.truckschemes[truckIndex].cargoblocks.length
+    plan1.truckschemes[truckIndex].cargoblocks.length
   );
 }
 export function rotateLeft() {
-  angles.h += Math.PI * uiConfig.rotationSpeed;
+  angles.h += Math.PI * uiExportConfig.rotationSpeed;
 }
 export function rotateRight() {
-  angles.h -= Math.PI * uiConfig.rotationSpeed;
+  angles.h -= Math.PI * uiExportConfig.rotationSpeed;
 }
 export function rotateUp() {
-  angles.v = Math.min(Math.PI / 2, angles.v + Math.PI * uiConfig.rotationSpeed);
+  angles.v = Math.min(
+    Math.PI / 2,
+    angles.v + Math.PI * uiExportConfig.rotationSpeed
+  );
 }
 export function rotateDown() {
-  angles.v = Math.max(0, angles.v - Math.PI * uiConfig.rotationSpeed);
+  angles.v = Math.max(0, angles.v - Math.PI * uiExportConfig.rotationSpeed);
 }
 export function zoomIn() {
-  distance = Math.max(100, distance * (1 - uiConfig.zoomSpeed));
+  distance = Math.max(100, distance * (1 - uiExportConfig.zoomSpeed));
 }
 export function zoomOut() {
-  distance *= 1 + uiConfig.zoomSpeed;
+  distance *= 1 + uiExportConfig.zoomSpeed;
 }
 </script>
