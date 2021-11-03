@@ -19,15 +19,6 @@ const router = createRouter({
       },
       component: () => import("../components/chooseTruck.vue"),
     },
-    // {
-    //   // 待引入的子组件，命名需要遵循大驼峰格式
-    //   path: "/TruckInput",
-    //   name: "TruckInput",
-    //   meta: {
-    //     title: "货车参数修改",
-    //   },
-    //   component: () => import("../components/truckInput.vue"),
-    // },
     {
       path: "/show",
       name: "show",
@@ -35,14 +26,6 @@ const router = createRouter({
         title: "结果展示",
       },
       component: () => import("../components/show.vue"),
-    },
-    {
-      path: "/three",
-      name: "three",
-      meta: {
-        title: "结果展示",
-      },
-      component: () => import("../components/three.vue"),
     },
   ],
 });

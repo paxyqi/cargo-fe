@@ -1,75 +1,105 @@
 <template>
   <div>
-    <n-card>
+    <n-space vertical>
       <n-layout>
-        <n-layout-header>
-          <n-icon size="60">
-            <CarOutline />
-          </n-icon>
-          <n-h1>货车参数与数量</n-h1>
+        <n-layout-header
+          bordered
+          content-style="padding: 12px;"
+          dropdown-placement="left-start"
+        >
+          <n-menu mode="horizontal" :options="menuHeadOptions" />
         </n-layout-header>
-        <n-layout-content>
-          <div
-            style="display: flex; flex-direction: column; align-items: center"
-          >
-            <n-data-table
-              ref="table"
-              :columns="columns"
-              :data="data"
-              :pagination="pagination"
-              :row-key="(row) => row.code"
-              @update:checked-row-keys="handleCheck"
-            />
-          </div>
-        </n-layout-content>
+        <n-layout has-sider>
+          <n-layout-sider bordered content-style="padding: 20px;">
+            <n-menu
+              :options="menuOptions"
+              :on-update:value="siderSelect"
+            ></n-menu>
+          </n-layout-sider>
+          <n-layout>
+            <n-card v-if="siderShowTruck">
+              <n-layout>
+                <n-layout-header>
+                  <n-icon size="60">
+                    <CarOutline />
+                  </n-icon>
+                  <n-h1>货车参数与数量</n-h1>
+                </n-layout-header>
+                <n-layout-content>
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                    "
+                  >
+                    <n-data-table
+                      ref="table"
+                      :columns="columns"
+                      :data="data"
+                      :pagination="pagination"
+                      :row-key="(row) => row.code"
+                      @update:checked-row-keys="handleCheck"
+                    />
+                  </div>
+                </n-layout-content>
+              </n-layout>
+            </n-card>
+            <n-card v-if="siderShowCargo">
+              <n-layout>
+                <n-layout-header>
+                  <n-icon size="60">
+                    <CartSharp />
+                  </n-icon>
+                  <n-h1>货物参数与数量</n-h1>
+                </n-layout-header>
+                <n-layout-content>
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                    "
+                  >
+                    <n-data-table
+                      ref="table"
+                      :columns="CargoColumns"
+                      :data="cargoData"
+                      :pagination="pagination"
+                      :row-key="(row) => row.code"
+                      @update:checked-row-keys="handleCargoCheck"
+                    />
+                  </div>
+                </n-layout-content>
+              </n-layout>
+            </n-card>
+            <n-modal v-model:show="showModal" :mask-closable="false">
+              <n-card>
+                <truck-input
+                  :init-value="childrenData"
+                  @formSubmit="onFormDataSubmit"
+                />
+              </n-card>
+            </n-modal>
+
+            <n-modal v-model:show="showCargoModal" :mask-closable="false">
+              <n-card>
+                <CargoInput
+                  :init-value="childrenCargoData"
+                  @formSubmit="onCargoFormDataSubmit"
+                />
+              </n-card>
+            </n-modal>
+            <br />
+            <br />
+            <br />
+            <n-space justify="center">
+              <n-button @click="send">发送订单</n-button>
+              <n-button @click="show">显示效果</n-button>
+            </n-space>
+          </n-layout>
+        </n-layout>
       </n-layout>
-    </n-card>
-    <n-modal v-model:show="showModal" :mask-closable="false">
-      <n-card>
-        <truck-input
-          :init-value="childrenData"
-          @formSubmit="onFormDataSubmit"
-        />
-      </n-card>
-    </n-modal>
-    <n-card>
-      <n-layout>
-        <n-layout-header>
-          <n-icon size="60">
-            <CartSharp />
-          </n-icon>
-          <n-h1>货物参数与数量</n-h1>
-        </n-layout-header>
-        <n-layout-content>
-          <div
-            style="display: flex; flex-direction: column; align-items: center"
-          >
-            <n-data-table
-              ref="table"
-              :columns="CargoColumns"
-              :data="cargoData"
-              :pagination="pagination"
-              :row-key="(row) => row.code"
-              @update:checked-row-keys="handleCargoCheck"
-            />
-          </div>
-        </n-layout-content>
-      </n-layout>
-    </n-card>
-    <n-modal v-model:show="showCargoModal" :mask-closable="false">
-      <n-card>
-        <CargoInput
-          :init-value="childrenCargoData"
-          @formSubmit="onCargoFormDataSubmit"
-        />
-      </n-card>
-    </n-modal>
-    <br />
-    <br />
-    <br />
-    <n-space justify="center">
-      <n-button @click="send">发送订单</n-button>
-      <n-button @click="show">显示效果</n-button>
     </n-space>
   </div>
 </template>
@@ -83,13 +113,21 @@ import {
   NCard,
   NLayout,
   NLayoutHeader,
+  NLayoutSider,
   NLayoutContent,
   NH1,
   NIcon,
   NModal,
+  NMenu,
   useNotification,
 } from "naive-ui";
-import { CarOutline, CartSharp } from "@vicons/ionicons5";
+import {
+  CarOutline,
+  CartSharp,
+  BookOutline as BookIcon,
+  PersonOutline as PersonIcon,
+  TimerOutline as HistoryIcon,
+} from "@vicons/ionicons5";
 import { ITruckItem } from "../model/truck";
 import { RawTruck } from "../model/rawTruckData";
 import { RawCargo } from "../model/rawCargoData";
@@ -539,4 +577,128 @@ const onCargoFormDataSubmit = (form: IChangeCargoForm) => {
   showCargoModal.value = false;
 };
 const pagination = { pageSize: 10 };
+
+function renderIcon(icon: any) {
+  return () => h(NIcon, null, { default: () => h(icon) });
+}
+const menuOptions = [
+  {
+    label: "选择货车",
+    key: "chooseTruck",
+    icon: renderIcon(BookIcon),
+  },
+  {
+    label: "选择货物",
+    key: "chooseCargo",
+    icon: renderIcon(BookIcon),
+  },
+];
+const menuHeadOptions = [
+  {
+    label: () =>
+      h(
+        NButton,
+        {
+          onClick: () => getHistoryList(),
+        },
+        { default: () => "用户列表" }
+      ),
+    key: "userList",
+    icon: renderIcon(PersonIcon),
+  },
+  {
+    label: () =>
+      h(
+        NButton,
+        {
+          onClick: () => getUserList(),
+        },
+        { default: () => "历史订单" }
+      ),
+    key: "history",
+    icon: renderIcon(HistoryIcon),
+  },
+];
+// 刚进入页面时显示选择货物的页面，选择货车的页面为false
+const siderShowCargo = ref(false);
+const siderShowTruck = ref(true);
+const siderSelect = (key: string) => {
+  if (key === "chooseTruck") {
+    siderShowTruck.value = true;
+    siderShowCargo.value = false;
+  }
+  if (key === "chooseCargo") {
+    siderShowTruck.value = false;
+    siderShowCargo.value = true;
+  }
+  console.log(siderShowTruck);
+  console.log(siderShowCargo);
+};
+let historyPlan = [];
+const getHistoryList = async () => {
+  const getHistoryURL = destinationURL + "/plan-repository";
+  const body = JSON.stringify({
+    // 获取历史订单
+    repositoryname: "plan-repository",
+  });
+  await fetch(getHistoryURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": destinationURL,
+      "Access-Control-Allow-Methods": "GET, POST",
+    },
+    body: body,
+    credentials: "include",
+    mode: "cors",
+  })
+    .then((response) => response.json())
+    .then((responseText) => {
+      console.log(responseText);
+      historyPlan = responseText.body;
+      console.log(historyPlan);
+      console.log(JSON.stringify(historyPlan));
+    })
+    .catch((e) => {
+      notice.create({
+        title: "错误",
+        content: e.toString(),
+        duration: 10000,
+        type: "error",
+      });
+    });
+};
+const getUserList = async () => {
+  const getHistoryURL = destinationURL + "/plan-repository";
+  const body = JSON.stringify({
+    // 获取历史订单
+    repositoryname: "plan-repository",
+  });
+  await fetch(getHistoryURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": destinationURL,
+      "Access-Control-Allow-Methods": "GET, POST",
+    },
+    body: body,
+    credentials: "include",
+    mode: "cors",
+  })
+    .then((response) => response.json())
+    .then((responseText) => {
+      console.log(responseText);
+      historyPlan = responseText.body;
+      console.log(historyPlan);
+      console.log(JSON.stringify(historyPlan));
+    })
+    .catch((e) => {
+      notice.create({
+        title: "错误",
+        content: e.toString(),
+        duration: 10000,
+        type: "error",
+      });
+    });
+};
 </script>
