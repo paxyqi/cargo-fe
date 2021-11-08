@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { NNotificationProvider, NMessageProvider } from "naive-ui";
+import {
+  NNotificationProvider,
+  NMessageProvider,
+  NThemeEditor,
+} from "naive-ui";
 </script>
 
 <template>
-  <n-notification-provider>
-    <n-message-provider>
-      <router-view></router-view>
-    </n-message-provider>
-  </n-notification-provider>
+  <n-theme-editor>
+    <n-notification-provider>
+      <n-message-provider>
+        <router-view style="min-height: max-content"></router-view>
+      </n-message-provider>
+    </n-notification-provider>
+  </n-theme-editor>
 </template>
 
 <style>
@@ -17,6 +23,6 @@ import { NNotificationProvider, NMessageProvider } from "naive-ui";
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height: 100%;
 }
 </style>

@@ -1,110 +1,183 @@
+<style>
+.bg {
+  background-color: rgb(203, 223, 232, 0.2);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-size: 100% 100%;
+}
+</style>
 <template>
-  <div>
+  <div class="bg">
     <n-space vertical>
-      <n-layout>
-        <n-layout-header
+      <n-layout
+        position="absolute"
+        style="
+          margin-top: 10%;
+          left: 15%;
+          right: 15%;
+          background-color: rgb(203, 223, 232, 0.1);
+        "
+      >
+        <n-tabs type="segment" @update:value="headerSiderSelect">
+          <n-tab-pane name="dataList" tab="业务数据"></n-tab-pane>
+          <n-tab-pane name="userList" tab="用户信息"></n-tab-pane>
+          <n-tab-pane name="history" tab="历史订单"></n-tab-pane>
+        </n-tabs>
+        <!-- <n-layout-header
           bordered
           content-style="padding: 12px;"
           dropdown-placement="left-start"
         >
-          <n-menu mode="horizontal" :options="menuHeadOptions" />
-        </n-layout-header>
-        <n-layout has-sider>
-          <n-layout-sider bordered content-style="padding: 20px;">
-            <n-menu
-              :options="menuOptions"
-              :on-update:value="siderSelect"
-            ></n-menu>
-          </n-layout-sider>
-          <n-layout>
-            <n-card v-if="siderShowTruck">
-              <n-layout>
-                <n-layout-header>
-                  <n-icon size="60">
-                    <CarOutline />
-                  </n-icon>
-                  <n-h1>货车参数与数量</n-h1>
-                </n-layout-header>
+          <n-menu
+            mode="horizontal"
+            :options="menuHeadOptions"
+            :on-update:value="headerSiderSelect"
+          />
+        </n-layout-header> -->
+        <n-layout-content>
+          <n-layout has-sider>
+            <n-layout-sider bordered content-style="padding: 20px;">
+              <n-menu
+                :options="menuOptions"
+                :on-update:value="siderSelect"
+              ></n-menu>
+            </n-layout-sider>
+            <n-layout-content>
+              <n-layout has-sider sider-placement="right">
                 <n-layout-content>
-                  <div
-                    style="
-                      display: flex;
-                      flex-direction: column;
-                      align-items: center;
-                    "
-                  >
+                  <n-card v-if="siderShowTruck && showData" embedded>
+                    <n-layout>
+                      <n-layout-header>
+                        <n-icon size="60">
+                          <CarOutline />
+                        </n-icon>
+                        <n-h1>货车参数与数量</n-h1>
+                      </n-layout-header>
+                      <n-layout-content>
+                        <div
+                          style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                          "
+                        >
+                          <n-data-table
+                            ref="table"
+                            :columns="columns"
+                            :data="data"
+                            :pagination="pagination"
+                            :row-key="(row) => row.code"
+                            @update:checked-row-keys="handleCheck"
+                          />
+                        </div>
+                      </n-layout-content>
+                    </n-layout>
+                  </n-card>
+                  <n-card v-if="siderShowCargo && showData" embedded>
+                    <n-layout>
+                      <n-layout-header>
+                        <n-icon size="60">
+                          <CartSharp />
+                        </n-icon>
+                        <n-h1>货物参数与数量</n-h1>
+                      </n-layout-header>
+                      <n-layout-content>
+                        <div
+                          style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                          "
+                        >
+                          <n-data-table
+                            ref="table"
+                            :columns="CargoColumns"
+                            :data="cargoData"
+                            :pagination="pagination"
+                            :row-key="(row) => row.code"
+                            @update:checked-row-keys="handleCargoCheck"
+                          />
+                        </div>
+                      </n-layout-content>
+                    </n-layout>
+                  </n-card>
+                  <n-card v-if="showUser" embedded>
+                    <n-icon size="60">
+                      <PersonIcon />
+                    </n-icon>
+                    <n-h1>用户信息</n-h1>
                     <n-data-table
-                      ref="table"
-                      :columns="columns"
-                      :data="data"
+                      :columns="userInfoList"
+                      :data="userInfoListData"
                       :pagination="pagination"
-                      :row-key="(row) => row.code"
-                      @update:checked-row-keys="handleCheck"
-                    />
-                  </div>
-                </n-layout-content>
-              </n-layout>
-            </n-card>
-            <n-card v-if="siderShowCargo">
-              <n-layout>
-                <n-layout-header>
-                  <n-icon size="60">
-                    <CartSharp />
-                  </n-icon>
-                  <n-h1>货物参数与数量</n-h1>
-                </n-layout-header>
-                <n-layout-content>
-                  <div
-                    style="
-                      display: flex;
-                      flex-direction: column;
-                      align-items: center;
-                    "
-                  >
+                    ></n-data-table>
+                  </n-card>
+                  <n-card v-if="showHistory" embedded>
+                    <n-icon size="60">
+                      <HistoryIcon />
+                    </n-icon>
+                    <n-h1>历史订单</n-h1>
                     <n-data-table
-                      ref="table"
-                      :columns="CargoColumns"
-                      :data="cargoData"
+                      :columns="historyList"
+                      :data="historyListData"
                       :pagination="pagination"
-                      :row-key="(row) => row.code"
-                      @update:checked-row-keys="handleCargoCheck"
-                    />
-                  </div>
+                    ></n-data-table>
+                  </n-card>
+                  <n-modal v-model:show="showModal" :mask-closable="false">
+                    <n-card>
+                      <truck-input
+                        :init-value="childrenData"
+                        @formSubmit="onFormDataSubmit"
+                      />
+                    </n-card>
+                  </n-modal>
+                  <n-modal v-model:show="showCargoModal" :mask-closable="false">
+                    <n-card>
+                      <CargoInput
+                        :init-value="childrenCargoData"
+                        @formSubmit="onCargoFormDataSubmit"
+                      />
+                    </n-card>
+                  </n-modal>
+                  <n-modal v-model:show="show3DModal">
+                    <n-card>
+                      <Show :init-value="showEncodeData" />
+                    </n-card>
+                  </n-modal>
                 </n-layout-content>
+                <n-layout-sider
+                  bordered
+                  show-trigger
+                  collapse-mode="width"
+                  :collapsed-width="12"
+                  :width="480"
+                  :native-scrollbar="false"
+                  content-style="padding: 24px;"
+                  v-if="showData"
+                >
+                  <n-h1>当前订单</n-h1>
+                  <!-- 右侧的边栏用于显示list -->
+                  <n-data-table
+                    :columns="orderListColumns"
+                    :data="orderListData"
+                    :pagination="pagination"
+                  ></n-data-table>
+                  <n-space justify="center" v-if="showData">
+                    <n-button @click="send">发送订单</n-button>
+                    <!-- <n-button @click="show">显示效果</n-button> -->
+                  </n-space>
+                </n-layout-sider>
               </n-layout>
-            </n-card>
-            <n-modal v-model:show="showModal" :mask-closable="false">
-              <n-card>
-                <truck-input
-                  :init-value="childrenData"
-                  @formSubmit="onFormDataSubmit"
-                />
-              </n-card>
-            </n-modal>
-
-            <n-modal v-model:show="showCargoModal" :mask-closable="false">
-              <n-card>
-                <CargoInput
-                  :init-value="childrenCargoData"
-                  @formSubmit="onCargoFormDataSubmit"
-                />
-              </n-card>
-            </n-modal>
-            <br />
-            <br />
-            <br />
-            <n-space justify="center">
-              <n-button @click="send">发送订单</n-button>
-              <n-button @click="show">显示效果</n-button>
-            </n-space>
+            </n-layout-content>
           </n-layout>
-        </n-layout>
+        </n-layout-content>
       </n-layout>
     </n-space>
   </div>
 </template>
 <script lang="ts" setup>
-const destinationURL = "http://10.128.215.232:8080";
+const destinationURL = "http://10.112.238.172:8080";
 import { ref, h, Ref, reactive } from "vue";
 import {
   NDataTable,
@@ -119,6 +192,8 @@ import {
   NIcon,
   NModal,
   NMenu,
+  NTabs,
+  NTabPane,
   useNotification,
 } from "naive-ui";
 import {
@@ -127,9 +202,12 @@ import {
   BookOutline as BookIcon,
   PersonOutline as PersonIcon,
   TimerOutline as HistoryIcon,
+  // ImagesOutline as ImageIcon,
 } from "@vicons/ionicons5";
 import { ITruckItem } from "../model/truck";
+import { IOrderList } from "../model/orderList";
 import { RawTruck } from "../model/rawTruckData";
+import { UserInfo } from "../model/userInfo";
 import { RawCargo } from "../model/rawCargoData";
 import { IChangeTruckForm } from "../model/changeTruck";
 import { IChangeCargoForm } from "../model/changeCargo";
@@ -138,9 +216,11 @@ import { Orientation } from "../model/orientation";
 import { TruckSpec } from "../model/truckSpec";
 import { CargoSpec } from "../model/cargoSpec";
 import { OrderSpec } from "../model/orderSpec";
+import { IHistoryList } from "../model/historyList";
 import { Task } from "../model/task";
 import TruckInput from "./truckInput.vue";
 import CargoInput from "./cargoInput.vue";
+import Show from "./show.vue";
 import {
   RowKey,
   TableSelectionColumn,
@@ -154,10 +234,6 @@ const createColumns = (change: (rowData: ITruckItem) => void) => [
   {
     title: "编码",
     key: "code",
-  },
-  {
-    title: "别名",
-    key: "name",
   },
   {
     title: "长",
@@ -206,10 +282,6 @@ const createCargoColumns = (change: (rowData: ICargoItem) => void) => [
     key: "code",
   },
   {
-    title: "别名",
-    key: "name",
-  },
-  {
     title: "长",
     key: "length",
   },
@@ -246,7 +318,67 @@ const createCargoColumns = (change: (rowData: ICargoItem) => void) => [
     },
   },
 ];
-
+const orderListColumns = [
+  {
+    title: "货车与货物编码",
+    key: "code",
+  },
+  {
+    title: "数量",
+    key: "amount",
+  },
+];
+const userInfoList = [
+  {
+    title: "ID",
+    key: "id",
+  },
+  {
+    title: "姓名",
+    key: "name",
+  },
+  {
+    title: "密码",
+    key: "password",
+  },
+];
+const historyList = [
+  {
+    title: "方案ID",
+    key: "id",
+  },
+  {
+    title: "订单ID",
+    key: "taskid",
+  },
+  {
+    title: "花费时间",
+    key: "timecost",
+  },
+  {
+    title: "查看结果",
+    key: "run",
+    render(row: IHistoryList) {
+      return h(
+        // 渲染函数
+        NButton,
+        {
+          // 通过h函数创建虚拟NButton节点
+          size: "small",
+          onClick: () => {
+            plan = row;
+            // console.log(plan);
+            // console.log(JSON.stringify(plan));
+            show3DModal.value = true;
+            encode = window.btoa(JSON.stringify(plan));
+            showEncodeData.showEncode = encode;
+          },
+        },
+        { default: () => "结果展示" }
+      );
+    },
+  },
+];
 // 将url获得的原始json文件转换位可以用于dataTable的数组
 function createTruckObj(rawData: RawTruck[]): ITruckItem[] {
   const res: ITruckItem[] = [];
@@ -254,7 +386,7 @@ function createTruckObj(rawData: RawTruck[]): ITruckItem[] {
     const newData: ITruckItem = {
       key: index,
       code: item.code,
-      name: item.name,
+      name: "111",
       quantity: 0,
       maxLoad: item.maxload,
       length: item.dimension.a,
@@ -272,7 +404,7 @@ function createCargoObj(rawData: RawCargo[]): ICargoItem[] {
     const newData: ICargoItem = {
       key: index,
       code: item.code,
-      name: item.name,
+      name: "111",
       quantity: 0,
       mass: item.mass,
       length: item.dimension.a,
@@ -293,6 +425,8 @@ let dataList: ITruckItem[] = [];
 // 货物数据绑定在cargoData，通过url获得的存在cargoDataList里面
 const cargoData: Ref<ICargoItem[]> = ref([]);
 let cargoDataList: ICargoItem[] = [];
+
+const orderListData: Ref<IOrderList[]> = ref([]);
 
 // 异步获取货车数据
 const getData = async () => {
@@ -420,6 +554,8 @@ const setSendBody = (): Task => {
       };
       cargoSpecArr.push(newCargoSpec);
     });
+    // 以上获取了选择的数据， 应当直接展示在右侧侧边栏
+    orderListData.value = truckSpecArr.concat(cargoSpecArr);
     const orderSpecArr: OrderSpec[] = [
       {
         code: "",
@@ -447,8 +583,15 @@ const setSendBody = (): Task => {
     return res;
   }
 };
+
 let plan = {};
 let encode = "";
+
+// 3D展示子组件
+const showEncodeData = reactive({
+  showEncode: "",
+});
+
 const send = async () => {
   const sendURL = destinationURL + "/solve";
   const obj = setSendBody();
@@ -473,8 +616,10 @@ const send = async () => {
       plan = responseText.body;
       console.log(plan);
       console.log(JSON.stringify(plan));
+      show3DModal.value = true;
       encode = window.btoa(JSON.stringify(plan));
-      console.log(encode);
+      showEncodeData.showEncode = encode;
+      console.log(showEncodeData.showEncode);
     })
     .catch((e) => {
       notice.create({
@@ -485,12 +630,14 @@ const send = async () => {
       });
     });
 };
-function show() {
-  console.log(encode);
-  window.open("../../public/3D/index.html?json=" + encode);
-}
+// function show() {
+//   console.log(encode);
+//   window.open("../../public/3D/index.html?json=" + encode);
+// }
 const showModal = ref(false);
 const showCargoModal = ref(false);
+const show3DModal = ref(false);
+
 // 货车子组件
 const childrenData = reactive({
   key: 0,
@@ -583,45 +730,59 @@ function renderIcon(icon: any) {
 }
 const menuOptions = [
   {
-    label: "选择货车",
+    label: "货车",
     key: "chooseTruck",
     icon: renderIcon(BookIcon),
   },
   {
-    label: "选择货物",
+    label: "货物",
     key: "chooseCargo",
     icon: renderIcon(BookIcon),
   },
+  // {
+  //   label: "方案",
+  //   key: "show",
+  //   icon: renderIcon(ImageIcon),
+  // },
 ];
-const menuHeadOptions = [
-  {
-    label: () =>
-      h(
-        NButton,
-        {
-          onClick: () => getHistoryList(),
-        },
-        { default: () => "用户列表" }
-      ),
-    key: "userList",
-    icon: renderIcon(PersonIcon),
-  },
-  {
-    label: () =>
-      h(
-        NButton,
-        {
-          onClick: () => getUserList(),
-        },
-        { default: () => "历史订单" }
-      ),
-    key: "history",
-    icon: renderIcon(HistoryIcon),
-  },
-];
+// const menuHeadOptions = [
+//   {
+//     label: () =>
+//       h(NButton, { onClick: () => {} }, { default: () => "业务数据" }),
+//     key: "dataList",
+//     icon: renderIcon(DataIcon),
+//   },
+//   {
+//     label: () =>
+//       h(
+//         NButton,
+//         {
+//           onClick: () => getUserList(),
+//         },
+//         { default: () => "用户信息" }
+//       ),
+//     key: "userList",
+//     icon: renderIcon(PersonIcon),
+//   },
+//   {
+//     label: () =>
+//       h(
+//         NButton,
+//         {
+//           onClick: () => getHistoryList(),
+//         },
+//         { default: () => "历史订单" }
+//       ),
+//     key: "history",
+//     icon: renderIcon(HistoryIcon),
+//   },
+// ];
 // 刚进入页面时显示选择货物的页面，选择货车的页面为false
 const siderShowCargo = ref(false);
 const siderShowTruck = ref(true);
+const showData = ref(true);
+const showUser = ref(false);
+const showHistory = ref(false);
 const siderSelect = (key: string) => {
   if (key === "chooseTruck") {
     siderShowTruck.value = true;
@@ -634,9 +795,29 @@ const siderSelect = (key: string) => {
   console.log(siderShowTruck);
   console.log(siderShowCargo);
 };
+const headerSiderSelect = (key: string) => {
+  if (key === "dataList") {
+    showData.value = true;
+    showUser.value = false;
+    showHistory.value = false;
+  }
+  if (key === "userList") {
+    showData.value = false;
+    showUser.value = true;
+    showHistory.value = false;
+    getUserList();
+  }
+  if (key === "history") {
+    showData.value = false;
+    showUser.value = false;
+    showHistory.value = true;
+    getHistoryList();
+  }
+};
 let historyPlan = [];
+const historyListData: Ref<IHistoryList[]> = ref([]);
 const getHistoryList = async () => {
-  const getHistoryURL = destinationURL + "/plan-repository";
+  const getHistoryURL = destinationURL + "/get-repository";
   const body = JSON.stringify({
     // 获取历史订单
     repositoryname: "plan-repository",
@@ -656,8 +837,8 @@ const getHistoryList = async () => {
     .then((responseText) => {
       console.log(responseText);
       historyPlan = responseText.body;
+      historyListData.value = responseText.body;
       console.log(historyPlan);
-      console.log(JSON.stringify(historyPlan));
     })
     .catch((e) => {
       notice.create({
@@ -668,13 +849,14 @@ const getHistoryList = async () => {
       });
     });
 };
+const userInfoListData: Ref<UserInfo[]> = ref([]);
 const getUserList = async () => {
-  const getHistoryURL = destinationURL + "/plan-repository";
+  const getUserURL = destinationURL + "/get-repository";
   const body = JSON.stringify({
-    // 获取历史订单
-    repositoryname: "plan-repository",
+    // 获取用户名单
+    repositoryname: "user-repository",
   });
-  await fetch(getHistoryURL, {
+  await fetch(getUserURL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -688,9 +870,7 @@ const getUserList = async () => {
     .then((response) => response.json())
     .then((responseText) => {
       console.log(responseText);
-      historyPlan = responseText.body;
-      console.log(historyPlan);
-      console.log(JSON.stringify(historyPlan));
+      userInfoListData.value = responseText.body;
     })
     .catch((e) => {
       notice.create({
@@ -702,3 +882,8 @@ const getUserList = async () => {
     });
 };
 </script>
+<style module>
+.n-layout {
+  margin-top: 20%;
+}
+</style>
