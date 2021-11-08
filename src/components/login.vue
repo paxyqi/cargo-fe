@@ -75,8 +75,8 @@ const login = async () => {
   console.log(userName.value, passwd.value);
   const data = JSON.stringify({
     // 整合登录信息
-    user_name: userName.value,
-    pass_word: passwd.value,
+    username: userName.value,
+    password: passwd.value,
   });
   const loginURL = "http://10.112.238.172:8080";
   await fetch(loginURL, {

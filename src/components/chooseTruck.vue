@@ -6,14 +6,36 @@
   position: fixed;
   background-size: 100% 100%;
 }
+.tableWidth {
+  max-width: max-content;
+}
+.title {
+  font-size: 60px;
+}
 </style>
 <template>
   <div class="bg">
     <n-space vertical>
+      <n-space
+        position="absolute"
+        style="
+          margin-top: 1%;
+          margin-left: 15%;
+          margin-right: 15%;
+          background-color: rgb(203, 223, 232, 0.2);
+        "
+      >
+        <n-h1
+          class="title"
+          style="margin-top: 5%; left: 10%; color: rgb(54, 78, 88, 0.8)"
+        >
+          三维装箱系统
+        </n-h1>
+      </n-space>
       <n-layout
         position="absolute"
         style="
-          margin-top: 10%;
+          margin-top: 8%;
           left: 15%;
           right: 15%;
           background-color: rgb(203, 223, 232, 0.1);
@@ -37,7 +59,14 @@
         </n-layout-header> -->
         <n-layout-content>
           <n-layout has-sider>
-            <n-layout-sider bordered content-style="padding: 20px;">
+            <n-layout-sider
+              bordered
+              content-style="padding: 5px;"
+              :collapsed-width="60"
+              :width="150"
+              collapse-mode="transform"
+              v-if="showData"
+            >
               <n-menu
                 :options="menuOptions"
                 :on-update:value="siderSelect"
@@ -71,10 +100,19 @@
                             @update:checked-row-keys="handleCheck"
                           />
                         </div>
+                        <n-space justify="center">
+                          <n-button>增加</n-button>
+                          <n-button>删除</n-button>
+                          <n-button>查询</n-button>
+                        </n-space>
                       </n-layout-content>
                     </n-layout>
                   </n-card>
-                  <n-card v-if="siderShowCargo && showData" embedded>
+                  <n-card
+                    v-if="siderShowCargo && showData"
+                    embedded
+                    padding="5px"
+                  >
                     <n-layout>
                       <n-layout-header>
                         <n-icon size="60">
@@ -99,6 +137,11 @@
                             @update:checked-row-keys="handleCargoCheck"
                           />
                         </div>
+                        <n-space justify="center">
+                          <n-button>增加</n-button>
+                          <n-button>删除</n-button>
+                          <n-button>查询</n-button>
+                        </n-space>
                       </n-layout-content>
                     </n-layout>
                   </n-card>
@@ -146,27 +189,39 @@
                     </n-card>
                   </n-modal>
                 </n-layout-content>
+
                 <n-layout-sider
                   bordered
                   show-trigger
-                  collapse-mode="width"
+                  collapse-mode="transform"
                   :collapsed-width="12"
-                  :width="480"
-                  :native-scrollbar="false"
-                  content-style="padding: 24px;"
+                  width="200"
                   v-if="showData"
                 >
-                  <n-h1>当前订单</n-h1>
-                  <!-- 右侧的边栏用于显示list -->
-                  <n-data-table
-                    :columns="orderListColumns"
-                    :data="orderListData"
-                    :pagination="pagination"
-                  ></n-data-table>
-                  <n-space justify="center" v-if="showData">
-                    <n-button @click="send">发送订单</n-button>
-                    <!-- <n-button @click="show">显示效果</n-button> -->
-                  </n-space>
+                  <n-card embedded>
+                    <br />
+                    <n-icon size="30">
+                      <ImageIcon />
+                    </n-icon>
+                    <n-h1>当前订单</n-h1>
+                    <!-- 右侧的边栏用于显示list -->
+                    <n-data-table
+                      :columns="orderListColumns"
+                      :data="orderListData"
+                      :pagination="pagination"
+                    ></n-data-table>
+                    <br />
+                    <n-data-table
+                      :columns="orderCargoListColumns"
+                      :data="orderListData"
+                      :pagination="pagination"
+                    ></n-data-table>
+                    <n-divider />
+                    <n-space justify="center" v-if="showData">
+                      <n-button @click="send">发送订单</n-button>
+                      <!-- <n-button @click="show">显示效果</n-button> -->
+                    </n-space>
+                  </n-card>
                 </n-layout-sider>
               </n-layout>
             </n-layout-content>
@@ -194,6 +249,7 @@ import {
   NMenu,
   NTabs,
   NTabPane,
+  NDivider,
   useNotification,
 } from "naive-ui";
 import {
@@ -202,7 +258,7 @@ import {
   BookOutline as BookIcon,
   PersonOutline as PersonIcon,
   TimerOutline as HistoryIcon,
-  // ImagesOutline as ImageIcon,
+  ImagesOutline as ImageIcon,
 } from "@vicons/ionicons5";
 import { ITruckItem } from "../model/truck";
 import { IOrderList } from "../model/orderList";
@@ -320,7 +376,17 @@ const createCargoColumns = (change: (rowData: ICargoItem) => void) => [
 ];
 const orderListColumns = [
   {
-    title: "货车与货物编码",
+    title: "货车编码",
+    key: "code",
+  },
+  {
+    title: "数量",
+    key: "amount",
+  },
+];
+const orderCargoListColumns = [
+  {
+    title: "货物编码",
     key: "code",
   },
   {
@@ -427,7 +493,7 @@ const cargoData: Ref<ICargoItem[]> = ref([]);
 let cargoDataList: ICargoItem[] = [];
 
 const orderListData: Ref<IOrderList[]> = ref([]);
-
+const orderCargoListData: Ref<IOrderList[]> = ref([]);
 // 异步获取货车数据
 const getData = async () => {
   const getTruckTypeURL = destinationURL + "/get-repository";
@@ -555,7 +621,8 @@ const setSendBody = (): Task => {
       cargoSpecArr.push(newCargoSpec);
     });
     // 以上获取了选择的数据， 应当直接展示在右侧侧边栏
-    orderListData.value = truckSpecArr.concat(cargoSpecArr);
+    orderListData.value = truckSpecArr;
+    orderCargoListData.value = cargoSpecArr;
     const orderSpecArr: OrderSpec[] = [
       {
         code: "",
